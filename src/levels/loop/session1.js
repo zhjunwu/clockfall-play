@@ -13,7 +13,8 @@
 
   // 一个圈：nodes = [{ id, label, cls, who }]，opts = { buttons, spin, cracks }
   // 有 Victoria 的 Game.art.ring 就用它画；需要点的时候（练习圈），在同样的位置叠一层透明按钮（圈停转后才出现）。
-  const R = 38;
+  // 点击按钮的半径跟着 Victoria 的圈走（她调半径时按钮不会错位）
+  const R = (G.art && G.art.ring && G.art.ring.R) || 38;
   const pos = (i, n) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; return [50 + R * Math.cos(a), 50 + R * Math.sin(a)]; };
   function ringHtml(nodes, opts) {
     opts = opts || {};
