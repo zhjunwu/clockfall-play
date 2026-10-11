@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>晨钟堡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@600;900&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.anim.css">
+</head>
+<body>
+  <main class="stage" id="app"></main>
+
+  <!-- 引擎（按依赖顺序） -->
+  <script src="src/core/namespace.js"></script>
+  <script src="src/config.js"></script>
+  <script src="src/core/contract.js"></script>
+  <script src="src/core/state.js"></script>
+  <script src="src/core/i18n.js"></script>
+  <script src="src/core/save.js"></script>
+  <script src="src/core/clock.js"></script>
+  <script src="src/core/events.js"></script>
+  <script src="src/core/ledger.js"></script>
+  <script src="src/core/titles.js"></script>
+  <script src="src/core/safety.js"></script>
+  <script src="src/core/map.js"></script>
+  <script src="src/core/router.js"></script>
+  <script src="src/ui/dom.js"></script>
+  <script src="src/ui/fx.js"></script>
+  <script src="src/ui/art.js"></script>
+  <script src="src/ui/fxlayer.js"></script>
+  <script src="src/ui/hold.js"></script>
+  <script src="src/ui/flags.js"></script>
+  <script src="src/ui/screens.js"></script>
+  <script src="src/ui/mapform.js"></script>
+  <script src="src/schedule.js"></script>
+  <script src="src/session/gamedemon.js"></script>
+  <script src="src/session/patrol.js"></script>
+  <script src="src/session/patrolday.js"></script>
+  <script src="src/session/runner.js"></script>
+
+  <!-- 剧本库：中文与英文各自独立撰写 -->
+  <script src="content/zh/common.js"></script>
+  <script src="content/zh/help.js"></script>
+  <script src="content/zh/glossary.js"></script>
+  <script src="content/zh/zero.js"></script>
+  <script src="content/zh/chest.js"></script>
+  <script src="content/zh/gamedemon.js"></script>
+  <script src="content/zh/patrol.js"></script>
+  <script src="content/zh/battle.js"></script>
+  <script src="content/zh/patrolday.js"></script>
+  <script src="content/zh/owl.js"></script>
+  <script src="content/zh/owl2.js"></script>
+  <script src="content/zh/owl3.js"></script>
+  <script src="content/zh/abyss.js"></script>
+  <script src="content/en/common.js"></script>
+  <script src="content/en/help.js"></script>
+  <script src="content/en/glossary.js"></script>
+  <script src="content/en/zero.js"></script>
+  <script src="content/en/chest.js"></script>
+  <script src="content/en/gamedemon.js"></script>
+  <script src="content/en/patrol.js"></script>
+  <script src="content/en/battle.js"></script>
+  <script src="content/en/patrolday.js"></script>
+  <script src="content/en/owl.js"></script>
+  <script src="content/en/owl2.js"></script>
+  <script src="content/en/owl3.js"></script>
+
+  <!-- 关卡 -->
+  <script src="src/levels/chest/minigame.js"></script>
+  <script src="src/levels/chest/session1.js"></script>
+  <script src="src/levels/chest/xray.js"></script>
+  <script src="src/levels/chest/training.js"></script>
+  <script src="src/levels/chest/session2.js"></script>
+  <script src="src/levels/chest/battle.js"></script>
+  <script src="src/levels/chest/dream.js"></script>
+  <script src="src/levels/chest/session3.js"></script>
+  <script src="src/levels/owl/minigame.js"></script>
+  <script src="src/levels/owl/session1.js"></script>
+  <script src="src/levels/owl/session2.js"></script>
+  <script src="src/levels/owl/session3.js"></script>
+  <script src="src/levels/abyss/minigame.js"></script>
+  <script src="src/levels/abyss/session1.js"></script>
+
+  <script src="src/app.js"></script>
+</body>
+</html>

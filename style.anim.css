@@ -1,0 +1,104 @@
+/* 画面与动画（Victoria）。原则：慢、稳、安心；只有魔鬼的东西是诱人的。
+   时长基准：呼吸 2.5s，进出场 .3s，复苏与走格 1.2s，没有任何东西快于 .2s。
+   颜色只用 style.css 的 token；红只给魔鬼（--demon-red）。
+   光的语法：琥珀 = 夺回的；青 = 看见的；红 = 魔鬼本身；冷白（--tempt）= 屏幕在拉你。 */
+:root {
+  /* 诱惑色：屏幕的冷光。与空壳人眼里的方形光、钟楼区的满窗冷光同一种光。
+     只用于"被偷"演示里想让玩家点的东西（放大的"再看一集"、深夜电视）。 */
+  --tempt: rgba(207, 227, 240, .55);
+  --tempt-solid: #cfe3f0;
+}
+
+/* ---------- 城市背景：灰底 + 琥珀层，暖度 --alive 随大钟格数 ---------- */
+.backdrop { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+body.scene-on .backdrop { opacity: 1; }
+/* 对白与关卡屏：背景整体压暗，正文对比度留足（Mary_to_Victoria_V003 B2） */
+.backdrop.dim .layer { filter: brightness(.72); }
+.backdrop .layer { position: absolute; inset: 0; background-repeat: no-repeat; background-position: center top; background-size: cover; }
+.backdrop .alive { opacity: var(--alive, .12); transition: opacity 1.2s ease; }
+.backdrop[data-scene="city"] .dead { background-image: url("assets/img/city-dead.webp"); }
+.backdrop[data-scene="city"] .alive { background-image: url("assets/img/city-alive.webp"); }
+.backdrop[data-scene="market"] .dead { background-image: url("assets/img/market-dead.webp"); }
+.backdrop[data-scene="market"] .alive { background-image: url("assets/img/market-alive.webp"); }
+/* 文字区上方压一层夜色，保证对比度 */
+.backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11, 13, 18, .55), rgba(11, 13, 18, .2) 30%, rgba(11, 13, 18, .35) 60%, rgba(11, 13, 18, .6) 85%, var(--night) 100%); }
+.stage { position: relative; z-index: 1; }
+
+/* ---------- 城市场景：大钟 + 主角 ---------- */
+/* 首页内容整体下移，玩家站在街上的感觉更强（Mary_to_Victoria_V004 B1） */
+body.scene-city .stack.center { margin-top: 6vh; }
+.cityscene { position: relative; width: 200px; height: 262px; margin: 4px auto 0; }
+.cityscene .art-clock { position: absolute; left: 10px; top: 0; width: 180px; height: 180px; overflow: visible; }
+.art-clock .halo { fill: var(--gold); opacity: .06; transition: opacity 1.2s ease; }
+.art-clock .tk { stroke: var(--grey); stroke-width: 1.4; stroke-linecap: round; opacity: .55; transition: stroke 1.2s ease, opacity 1.2s ease; }
+.art-clock .tk.long { stroke-width: 2.4; }
+.art-clock .tk.lit { stroke: var(--gold); opacity: 1; }
+.art-clock .hand { transform-origin: 100px 100px; transform: rotate(calc(var(--pct) * 3.6deg)); transition: transform 1.2s cubic-bezier(.4, 0, .2, 1); }
+.art-clock.ticked .halo { animation: tickglow 2.4s ease-out 1; }
+@keyframes tickglow { 0% { opacity: .06; } 35% { opacity: .22; } 100% { opacity: .06; } }
+
+.cityscene .art-hero { position: absolute; left: 72px; bottom: 0; width: 46px; height: auto; overflow: visible; }
+.art-hero .body { transform-origin: 55px 192px; animation: breathe 2.5s ease-in-out infinite; }
+.art-hero .lantern { transform-origin: 92px 108px; animation: sway 5s ease-in-out infinite; }
+.art-hero .lamp-halo { opacity: calc(var(--lamp, .3) * .9); }
+.art-hero .flame { opacity: calc(.35 + var(--lamp, .3) * .65); }
+@keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.015); } }
+@keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+/* ---------- 零 ---------- */
+.art-zero .tail { transform-origin: 46px 50px; animation: tailsway 3.2s ease-in-out infinite; }
+.art-zero .dot { fill: #4a2422; transition: fill 3s ease; }
+.art-zero.relapse .dot { fill: var(--demon-red); filter: drop-shadow(0 0 4px var(--demon-red)); }
+@keyframes tailsway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+
+/* ---------- 空壳人：方形冷光极慢起伏，不规律，不闪（Mary_to_Victoria_V002 三） ---------- */
+.art-hollow .glare { opacity: .6; animation: glare 11s ease-in-out infinite; }
+.art-hollow:nth-child(2n) .glare { animation-duration: 13.7s; animation-delay: -4s; }
+.art-hollow:nth-child(3n) .glare { animation-duration: 9.3s; animation-delay: -7s; }
+@keyframes glare { 0%, 100% { opacity: .5; } 50% { opacity: .75; } }
+
+/* ---------- 宝箱魔：合、开两态是诱人的普通宝箱；现形时露牙、亮眼；壳碎是泄气 ---------- */
+.chest.art .art-chest .brass { fill: #8a6a32; transition: fill 1.2s ease; }
+.chest.art .art-chest .brass-line { stroke: #8a6a32; transition: stroke 1.2s ease; }
+.chest.art .art-chest .teeth { opacity: 0; transition: opacity .6s ease; }
+.chest.art.revealed .art-chest .teeth { opacity: 1; }
+.chest.art.revealed .art-chest .brass { fill: #4a4f5c; }
+.chest.art.revealed .art-chest .brass-line { stroke: #4a4f5c; }
+.chest.art .art-chest .inner { fill: var(--gold); opacity: 0; transition: opacity .3s ease; }
+.chest.art.open .art-chest .inner, .chest.art.glow .art-chest .inner { opacity: .95; filter: drop-shadow(0 -6px 14px var(--gold)); }
+.chest.art .art-chest .eyes circle { fill: var(--demon-red); opacity: 0; transition: opacity .6s ease; }
+.chest.art.revealed .art-chest .eyes circle { opacity: 1; filter: drop-shadow(0 0 3px var(--demon-red)); }
+.chest.art .art-chest .crack { opacity: 0; }
+.chest.art.shattered .art-chest .crack { opacity: 1; }
+.chest.art.shattered .art-chest .inner { fill: #000; opacity: 1; }
+.chest.art.shattered .art-chest .eyes circle { opacity: .25; filter: none; }
+.chest.art.shattered svg { transform-origin: 50% 100%; animation: deflate 1.2s ease-in forwards; }
+@keyframes deflate { 0% { transform: none; } 40% { transform: scale(1.02, .96); } 100% { transform: scale(.92, .78) skewX(-4deg); opacity: .7; } }
+
+/* ---------- 按住圆环：像吸一口气；完成是落定，不是中奖 ---------- */
+.surf .bar { transition: background .15s linear; }
+.surf.holding { box-shadow: 0 0 0 6px rgba(98, 214, 198, .06), 0 0 28px rgba(98, 214, 198, .12); transition: box-shadow 1.2s ease; }
+.surf.settled { border-color: var(--gold); box-shadow: 0 0 22px rgba(227, 169, 58, .18); transition: border-color 1.2s ease, box-shadow 1.2s ease; }
+.surf.settled .bar { background: conic-gradient(var(--gold) 100%, transparent 0); }
+
+/* ---------- 亮牌小卡：底部淡入上浮 8px ---------- */
+.flagcard { transform: translate(-50%, 8px); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
+.flagcard.quiet { box-shadow: none; transition: opacity .8s ease; }
+
+/* ---------- 夜枭关：屏幕的冷光是这一屏最诱人的东西；出口照常完整、清楚 ---------- */
+.tv { box-shadow: 0 0 36px rgba(207, 227, 240, .10), inset 0 0 40px rgba(207, 227, 240, .06); }
+.btn-choice.tempt { border-color: var(--tempt-solid); color: #f4f8fb; box-shadow: 0 0 18px var(--tempt); }
+.choices2 .btn-choice.grow { box-shadow: 0 0 calc(18px + 14px * (var(--grow) - 1)) var(--tempt); }
+/* 关灯时钟不是琥珀（琥珀 = 夺回的时间）。平时中性，过了关灯时间变冷白。 */
+.tvclock { color: var(--muted); transition: color 1.2s ease; }
+.tvclock.past { color: var(--tempt-solid); }
+
+/* ---------- 出口：瞬间静止 ---------- */
+body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none !important; transition: none !important; }
+
+/* ---------- 减少动态效果：发光、闪烁、摇摆改为静态，只留淡入淡出 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .art-hero .body, .art-hero .lantern, .art-zero .tail, .art-hollow .glare, .art-clock.ticked .halo { animation: none; }
+  .art-clock .hand { transition: none; }
+  .chest.art.shattered svg { animation: none; opacity: .7; }
+}
