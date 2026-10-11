@@ -19,7 +19,7 @@
       "game.title", "lang.choose", "lang.switch", "lang.zh", "lang.en",
       "settings.title", "settings.close",
       "help.menuEntry", "help.notTherapy", "help.resources",
-      "save.export", "save.import", "save.exportWarning", "save.importPrompt", "save.importOk", "save.importBad", "save.copy",
+      "save.section", "save.export", "save.import", "save.exportWarning", "save.importPrompt", "save.importOk", "save.importBad", "save.copy",
       "calendar.icon", "lock.notYet", "lock.catchUpOnePerDay",
       "city.enter", "city.doneForToday", "dev.title", "a11y.holdAlternative", "settings.sound", "settings.soundNote",
     ],
@@ -47,7 +47,7 @@
       "gameDemon.setStayMinutes", "gameDemon.stayTimeUp", "gameDemon.closedIsLeave", "gameDemon.distractBtn", "gameDemon.recognized",
       "gameDemon.lateNight", "gameDemon.lateNightOnce", "gameDemon.leaveMeansSleep",
       "codex.title", "codex.empty",
-      "playtest.export",
+      "playtest.export", "playtest.sendHint", "playtest.copied",
     ],
     fns: [
       "zero.guessCue", "zero.guessBasis", "zero.returnLine",

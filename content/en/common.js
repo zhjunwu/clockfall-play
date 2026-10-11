@@ -15,6 +15,7 @@ Game.content.register("en", "common", {
     "lock.catchUpOnePerDay": "You've done today's part.",
     "city.enter": "Enter the city",
     "city.doneForToday": "That's it for today.",
+    "save.section": "Switching phones",
     "save.export": "Export save code",
     "save.exportWarning": "Your save code contains things you wrote. Keep it to yourself.",
     "save.import": "Import save code",
@@ -32,6 +33,8 @@ Game.content.register("en", "common", {
     "codex.title": "Demon codex",
     "codex.empty": "Still empty.",
     "playtest.export": "Export playtest data",
+    "playtest.sendHint": "Tap to send it to the person who invited you. It only has what you tapped, nothing you wrote.",
+    "playtest.copied": "Copied. Paste it to the person who invited you.",
     // Titles (in-game events only) and the "auto-stop" status (shown separately)
     "title.earned": "You are now",
     "title.stolen": "Pickpocketed",

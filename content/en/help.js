@@ -12,11 +12,11 @@ Game.content.register("en", "help", {
       "This game is about phones and attention. It isn't therapy, and it can't replace it.",
       "If you've been feeling low a lot, can't sleep, or don't want to talk to anyone, that's not something a trick can fix. Talk to an adult you trust, or use one of these.",
     ],
-    // To verify: numbers and names below must be checked by a reviewer for the region this build ships to.
+    // Verified by Junwu 2026-10-11 against public sources (988, Crisis Text Line, findahelpline.com).
     "help.resources": [
-      { name: "988 Suicide & Crisis Lifeline (US)", how: "Call or text 988 (to verify)", tel: "988" },
-      { name: "Crisis Text Line (US)", how: "Text HOME to 741741 (to verify)" },
-      { name: "Outside the US", how: "findahelpline.com lists helplines by country (to verify)" },
+      { name: "988 Suicide & Crisis Lifeline (US)", how: "Call or text 988", tel: "988" },
+      { name: "Crisis Text Line (US)", how: "Text HOME to 741741" },
+      { name: "Outside the US", how: "findahelpline.com lists helplines by country" },
       { name: "Emergency", how: "Call your local emergency number" },
     ],
   },

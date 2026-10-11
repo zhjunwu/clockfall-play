@@ -361,3 +361,9 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .feedart { display: block; height: 30vh; border-radius: 10px; background: linear-gradient(160deg, hsl(var(--hue) 30% 32%), hsl(calc(var(--hue) + 40) 25% 18%)); }
 .swipehint { text-align: center; }
 .feedexit { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 5; }
+
+/* 语言选择：第一屏，居中 */
+.langpick { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 32px; text-align: center; }
+.langtitle { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; justify-content: center; margin: 0; }
+.langtitle i { font-style: normal; color: var(--muted); font-weight: 400; }
+.langpick #langs { width: min(280px, 100%); }

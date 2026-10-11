@@ -21,6 +21,8 @@ Game.content.register("zh", "common", {
     "codex.title": "魔鬼图鉴",
     "codex.empty": "还是空的。",
     "playtest.export": "导出试玩数据",
+    "playtest.sendHint": "点一下，发给邀请你的人。里面只有你点了什么，没有你写的话。",
+    "playtest.copied": "已复制。粘贴发给邀请你的人。",
     // 称号（只看游戏内事件）与"自动停"状态（分开显示）
     "title.earned": "你现在是",
     "title.stolen": "被偷者",
@@ -34,6 +36,7 @@ Game.content.register("zh", "common", {
     "a11y.holdAlternative": "用点两下代替长按",
     "settings.sound": "声音",
     "settings.soundNote": "很轻，只在你点、按住的时候响。深夜会更轻。不想要就关掉。",
+    "save.section": "换手机时用",
     "save.export": "导出存档码",
     "save.exportWarning": "存档码里有你写的话。只给你自己用，别发给别人。",
     "save.import": "导入存档码",

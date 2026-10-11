@@ -17,14 +17,16 @@
   // ---------- 语言选择（首次） ----------
   function langScreen() {
     const p = G.i18n.packs;
-    const label = (l) => {
+    const text = (l, id) => {
       const c = p[l] && p[l].common && p[l].common.text;
-      return c ? c["lang." + l] : l;
+      return c ? c[id] : "";
     };
+    // 唯一一处两种语言同时出现：游戏名并排，按钮居中放大，别的什么都不加
     G.router.show(`
-      <div class="stack center">
-        <div class="row" id="langs">
-          ${G.i18n.LANGS.map((l) => `<button type="button" class="btn-choice" data-lang="${l}">${esc(label(l))}</button>`).join("")}
+      <div class="langpick">
+        <h1 class="langtitle">${G.i18n.LANGS.map((l) => `<span lang="${l}">${esc(text(l, "game.title"))}</span>`).join('<i aria-hidden="true">/</i>')}</h1>
+        <div class="stack" id="langs">
+          ${G.i18n.LANGS.map((l) => `<button type="button" class="btn-main" data-lang="${l}">${esc(text(l, "lang." + l) || l)}</button>`).join("")}
         </div>
       </div>
     `, { name: "lang" });
@@ -168,16 +170,15 @@
           ${resourceList()}
         </section>
         <section class="stack">
-          <p class="eyebrow">${fmt(G.t("save.export"))}</p>
+          <p class="eyebrow">${fmt(G.t("save.section"))}</p>
           <p class="hint">${fmt(G.t("save.exportWarning"))}</p>
           ${btn("export", G.t("save.export"), "btn-quiet")}
           <textarea id="exportBox" class="code" readonly hidden></textarea>
-          <p class="eyebrow">${fmt(G.t("save.import"))}</p>
           <textarea id="importBox" class="code" placeholder="${esc(G.text("save.importPrompt"))}"></textarea>
           ${btn("import", G.t("save.import"), "btn-quiet")}
           <p class="hint" id="importMsg" aria-live="polite"></p>
         </section>
-        ${playtest ? `<section class="stack">${btn("ptExport", G.t("playtest.export"), "btn-quiet")}<textarea id="ptBox" class="code" readonly hidden></textarea></section>` : ""}
+        ${playtest ? `<section class="stack">${btn("ptExport", G.t("playtest.export"), "btn-quiet")}<p class="hint" id="ptMsg" aria-live="polite">${fmt(G.t("playtest.sendHint"))}</p><textarea id="ptBox" class="code" readonly hidden></textarea></section>` : ""}
         ${btn("back", G.t("settings.close"))}
       </div>
     `, { name: "settings" });
@@ -208,11 +209,33 @@
     });
     const pt = G.router.$("#ptExport");
     if (pt)
-      pt.addEventListener("click", () => {
-        const box = G.router.$("#ptBox");
-        box.value = G.events.exportText();
-        box.hidden = false;
-        box.select();
+      // 手机上：先弹系统分享（可直接发到聊天软件或邮件）；不支持就复制到剪贴板；都不行才显示文本框让玩家自己复制
+      pt.addEventListener("click", async () => {
+        const data = G.events.exportText();
+        const msg = G.router.$("#ptMsg");
+        const showBox = () => {
+          const box = G.router.$("#ptBox");
+          box.value = data;
+          box.hidden = false;
+          box.select();
+        };
+        if (navigator.share) {
+          try {
+            await navigator.share({ text: data });
+            G.events.log("playtest.export", { option: "share" });
+            return;
+          } catch (e) {
+            if (e && e.name === "AbortError") return; // 玩家自己取消了分享
+          }
+        }
+        try {
+          await navigator.clipboard.writeText(data);
+          msg.textContent = G.text("playtest.copied");
+          G.events.log("playtest.export", { option: "copy" });
+        } catch (e) {
+          showBox();
+          G.events.log("playtest.export", { option: "box" });
+        }
       });
     G.router.$("#back").addEventListener("click", () => city());
   }
