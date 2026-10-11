@@ -14,6 +14,12 @@
     return "zero";
   }
 
+  // 无人在场的日子：一行旁白，按天轮换（第 37～39 天）；没有就用旧的那一句
+  function aloneLine(day) {
+    const a = G.t("alone.lines");
+    return Array.isArray(a) && a.length ? a[day % a.length] : G.t("alone.patrolLine");
+  }
+
   // 从一组里抽一句，避免和上次同一组抽到的重复（引擎规则：随机抽取不连续重复）
   function pick(arr, key) {
     if (!Array.isArray(arr) || !arr.length) return arr || null;
@@ -68,7 +74,7 @@
   function minionsIntro() {
     return new Promise((resolve) => {
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${whoIsPresent(G.clock.today()) || "narrator"}">
           ${paras(G.t("minion.intro"))}
         </div>
         ${btn("go", G.t("talk.next"))}
@@ -88,8 +94,8 @@
 
     // 回城
     if (who === "zero") await talk({ speaker: "zero", eyebrow: G.t("city.return.eyebrow"), lines: G.f("zero.returnLine", { session: idx, clockDelta: delta }) });
-    else if (who) await talk({ speaker: "baker", eyebrow: G.t("city.return.eyebrow"), lines: pick(G.f("companion.returnLine", { who }), "return." + who) });
-    else await talk({ speaker: "narrator", eyebrow: G.t("city.return.eyebrow"), lines: G.t("alone.patrolLine") });
+    else if (who) await talk({ speaker: who, eyebrow: G.t("city.return.eyebrow"), lines: pick(G.f("companion.returnLine", { who }), "return." + who) });
+    else await talk({ speaker: "narrator", eyebrow: G.t("city.return.eyebrow"), lines: aloneLine(day) });
 
     // 巡逻报告
     await G.patrol.report({ detail: idx >= 3 });
@@ -107,12 +113,13 @@
     const rescued = s.rescued || [];
     for (const r of rescued) {
       const line = pick(G.t("rescued." + r), "news." + r);
-      if (line) await talk({ speaker: r, lines: line });
+      // 近况是旁白的一句画面描述，不用他们自己的对白框（第 37～39 天也一样安静）
+      if (line) await talk({ speaker: "narrator", lines: line });
     }
 
     // 结束：在场角色一句话；无人时只有旁白
     if (who === "zero") await talk({ speaker: "zero", lines: G.t("zero.patrolEnd"), nextLabel: G.t("talk.leaveNow") });
-    else if (who) await talk({ speaker: "baker", lines: G.f("companion.patrolEnd", { who }), nextLabel: G.t("talk.leaveNow") });
+    else if (who) await talk({ speaker: who, lines: G.f("companion.patrolEnd", { who }), nextLabel: G.t("talk.leaveNow") });
     else await talk({ speaker: "narrator", lines: G.t("alone.patrolLine"), nextLabel: G.t("talk.leaveNow") });
 
     G.state.update((x) => (x.calendar.patrolDoneOnDay = Object.assign(x.calendar.patrolDoneOnDay || {}, { [day]: true })));

@@ -94,7 +94,7 @@
       "city.patrol", "city.patrolDone",
       "minion.eyebrow", "minion.intro", "minion.skip", "minion.holdFirst", "minion.whichOne", "minion.redDot", "minion.autoplay", "minion.streak",
       "minion.killed", "minion.escaped", "minion.done",
-      "rescued.baker", "zero.patrolEnd", "alone.patrolLine",
+      "rescued.baker", "rescued.watchman", "rescued.messenger", "zero.patrolEnd", "alone.patrolLine",
     ],
     fns: ["demonTaunt", "demonQuotePatrol", "battle.attackLine", "battle.roundOf", "battle.zeroRebut", "companion.returnLine", "companion.patrolEnd"],
   };
@@ -215,11 +215,22 @@
     fns: ["zero1.companionNews"],
   };
 
+  // M13：第 37～39 天自己的巡逻、第 40 天总结
+  const m13 = {
+    ids: [
+      "alone.lines", "patrol.reply.alone", "finale.eyebrow", "finale.next", "finale.prev", "finale.leave", "finale.notFinished", "finale.ledgerTitle", "finale.noReport37",
+      "finale.screenTitle", "finale.zeroNumbers", "finale.cityTitle", "finale.goodLoops", "finale.zeroBack", "finale.codexTitle", "finale.codex", "finale.realRecordLabel",
+      "finale.gameOnly", "finale.exportCodex", "finale.titleTitle", "finale.autoStop", "finale.cardTitle", "finale.cardCues", "finale.noCues", "finale.cardLoop",
+      "finale.cardLine", "finale.zeroLine", "finale.cardHint", "finale.lastLink", "finale.holdIt", "finale.zeroGo", "finale.seasonDone",
+    ],
+    fns: ["finale.clockLine", "finale.stops", "finale.stopsByCue", "finale.since37", "finale.week", "finale.real"],
+  };
+
   G.contract = {
     enums,
-    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12 },
+    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13 },
     // 每种语言当前要求齐全的里程碑
-    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11", "m12"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11"] },
+    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11", "m12", "m13"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11"] },
     idsFor(lang) {
       return (this.requiredByLang[lang] || []).flatMap((m) => this.milestones[m].ids);
     },

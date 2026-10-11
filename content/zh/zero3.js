@@ -4,14 +4,14 @@
 // 发誓分支：句子里有"再也不 / 永远不 / 绝不"，破罐魔笑，零第一次开口："别发誓。说你现在做什么。"——可以改，也可以不改（不惩罚）。
 // 破罐魔不碎（它会再来，这是真的）。结尾停在零"……你刚才那句，再说一遍。"，endHook: none（Mary_V061 第 4 点）。
 // 玩家那句话只存本机（player.rebuttalLine），不进日志；第 34 天、巡逻、第 40 天护身卡复用。审核时请专家确认"发誓"那段的表述。
-// 作者：Claude（Mark）  审核人：（空）  状态：draft
+// 作者：Claude（Mark）  审核人：（空）  状态：draft（Fable 5.1 润色，Junwu 2026-10-11 同意）
 Game.content.register("zh", "zero3", {
   meta: { author: "Claude (Mark)", reviewer: "", status: "draft" },
   text: {
     "zero3.eyebrow": "钟楼下",
-    "zero3.found": "钟楼下，零蹲在墙角。胸口那一点是红的。",
+    "zero3.found": "钟楼下，零蹲在墙角。胸口那一点，是亮红的。",
     "zero3.zeroAway": "别过来。我已经回不去了。",
-    "zero3.jarEnter": ["你看，它已经破了。", "破了的罐子，再摔一下有什么关系？"],
+    "zero3.jarEnter": ["你看，它已经破了。", "破了的罐子，再摔一下，有什么关系？"],
     "zero3.zeroTrail": "反正已经……",
     "zero3.pickQ": "回它一句。先挑一句最像你会说的。",
     // 三句候选；parts 里的 { opts } 是可换的词块（点一下换下一个），第一个是原词
@@ -33,7 +33,7 @@ Game.content.register("zh", "zero3", {
     "zero3.vowWords": ["再也不", "永远不", "绝不", "再不会"],
     "zero3.jarVow": "再也不？那你下次失手的时候，我就又能出场了。",
     "zero3.zeroVow": "别发誓。说你现在做什么。",
-    "zero3.jarLeave": ["破罐魔缩回了角落。", "它没碎。它会再来，可它现在说不出话了。"],
+    "zero3.jarLeave": ["破罐魔缩回了角落。", "它没碎。它会再来。可现在，它说不出话了。"],
     "zero3.zeroAsk": "……你刚才那句，再说一遍。",
   },
   fn: {},

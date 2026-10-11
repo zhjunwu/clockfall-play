@@ -34,6 +34,14 @@
 
     for (const beat of beats) await beat(ctx);
 
+    // 没有最后一战的局（第 40 天总结：它自己的第 7 页就是"最后一环"）
+    if (session.noEndfight) {
+      G.clock.markSessionDone(session.id);
+      G.events.log("session.end", { sessionId: session.id, choice: "leave" });
+      G.state.update((s) => (s.inProgress = null));
+      return G.app.city();
+    }
+
     // 悬念亮牌，然后进入最后一战
     G.state.update((s) => (s.inProgress = { sessionId: session.id, phase: "endfight", startedAt: Date.now() }));
     if (session.endHook && session.endHook !== "none") await G.flags.show(session.endHook, { quiet: !!session.quietFlag, textId: session.flagId });

@@ -23,6 +23,18 @@ Game.content.register("en", "patrolday", {
       "The baker left a loaf at the foot of the bell tower. Didn't say who it was for.",
       "The baker's teaching a kid to knead.",
     ],
+    "rescued.watchman": [
+      "The watchman is sweeping the steps under the tower.",
+      "The watchman turned his lamp off early tonight.",
+      "The watchman sat out in the daytime sun for a while.",
+      "The watchman is dusting the clock.",
+    ],
+    "rescued.messenger": [
+      "The messenger delivered a letter and headed home.",
+      "The messenger stopped for a moment at a hallway window.",
+      "The messenger took a road he'd never taken today.",
+      "The messenger hung his empty bag behind the door.",
+    ],
     "zero.patrolEnd": ["Patrol's done.", "The city's still here. So are you."],
     "alone.patrolLine": "The city is quiet. The clock is running.",
   },

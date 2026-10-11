@@ -86,6 +86,23 @@
   function city(opts) {
     opts = opts || {};
     const day = G.clock.touch();
+    // 第一季结束后：城市只剩日历和设置，一句"第一季结束了。"（不预告续集）
+    if (G.state.get().flags.seasonDone) {
+      G.router.show(`
+        <header class="topbar">
+          <button type="button" class="icon" id="calendar" aria-label="${esc(G.text("calendar.icon"))}">◷</button>
+          <button type="button" class="icon" id="settings" aria-label="${esc(G.text("settings.title"))}">≡</button>
+        </header>
+        <div class="stack center">
+          <h1>${fmt(G.t("game.title"))}</h1>
+          ${clockWidget()}
+          <p class="hint">${fmt(G.t("finale.seasonDone"))}</p>
+        </div>
+      `, { name: "city" });
+      G.router.$("#settings").addEventListener("click", () => settings());
+      G.router.$("#calendar").addEventListener("click", () => G.router.$("#calendar").blur());
+      return;
+    }
     const next = G.clock.nextSession();
     let entry = "";
     let note = "";

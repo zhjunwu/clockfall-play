@@ -23,9 +23,11 @@
       const line = G.state.get().player.rebuttalLine;
       if (line) await talk({ speaker: "zero", lines: G.t("zero5.giveBack"), extraHtml: `<p class="rebuttal said">${esc(line)}</p>` });
     },
-    () => {
+    async () => {
       G.state.update((s) => (s.sessions.zero5 = { back: true }));
-      return talk({ speaker: "zero", lines: G.t("zero5.ownPatrol") });
+      await talk({ speaker: "zero", lines: G.t("zero5.ownPatrol") });
+      // 救回零 → 解缚者（design.md 4.4 称号）
+      await G.titles.awardAndShow("unbinder");
     },
   ];
 

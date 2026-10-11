@@ -22,6 +22,8 @@
     { id: "zero3", level: "zero", key: "session3", earliestDay: 31, endHook: "none", playable: true },
     { id: "zero4", level: "zero", key: "session4", earliestDay: 34, endHook: "none", playable: true },
     { id: "zero5", level: "zero", key: "session5", earliestDay: 36, endHook: "none", playable: true },
+    // 第 40 天总结：没有最后一战（第 7 页的"离开"就是）
+    { id: "finale", level: "finale", key: "session1", earliestDay: 40, endHook: "none", playable: true, noEndfight: true },
   ];
 
   function beatsOf(session) {

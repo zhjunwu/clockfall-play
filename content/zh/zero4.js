@@ -4,14 +4,14 @@
 // 孤单那一环不能剪：点一下"陪它坐一会儿"，然后什么都不用做，圈就慢下来——不给技巧，只要在场。
 // 认错 / 用错：圈最多加速一格，破罐魔"错了吧？反正……"，用那句话回它，立刻恢复原速。失误本身就是在练"失手后不放弃"。
 // 最后零说"我已经回不去了"，玩家按住把那句话说出口，零的钟重新走起来。endHook: none。
-// 作者：Claude（Mark）  审核人：（空）  状态：draft
+// 作者：Claude（Mark）  审核人：（空）  状态：draft（Fable 5.1 润色，Junwu 2026-10-11 同意）
 Game.content.register("zh", "zero4", {
   meta: { author: "Claude (Mark)", reviewer: "", status: "draft" },
   text: {
     "zero4.eyebrow": "零的梦",
     "zero4.asleep": "零在钟楼下睡着了。",
     "zero4.companion": "它睡着了。梦里还在放。",
-    "zero4.enter": ["你走进零的梦。", "梦里是一个圈。圈上站着它那一晚的每一样东西，中间坐着零。"],
+    "zero4.enter": ["你走进零的梦。", "梦里是一个圈。那一晚的每一样都在圈上，零坐在中间。"],
     "zero4.nodes": { owl: "深夜", dot: "老同伴", chest: "只放一个", jar: "反正已经……", zero: "零" },
     "zero4.whisper": {
       owl: "这么晚了，反正睡不着。",

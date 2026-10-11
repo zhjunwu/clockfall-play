@@ -471,3 +471,11 @@ button.loopnode { cursor: pointer; }
 .zeroclock .paused { width: 14%; background: var(--line); }
 .ringwrap .ringcenter { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: .8rem; color: var(--muted); }
 .ringwrap .ringcenter.on { color: var(--ink); }
+
+/* 第 40 天总结 */
+.finaletop { justify-content: space-between; }
+.plain { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.codexpage { border-top: 1px solid var(--line); padding-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.codexpage .real { color: var(--gold); }
+.amulet { border: 1px solid var(--gold); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: var(--panel); }
+.amulet .zeroline { font-family: var(--font-display); margin-top: 8px; }

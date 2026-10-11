@@ -60,8 +60,10 @@
 
   function reply(kind, stopped, canMore) {
     return new Promise((resolve) => {
-      const lines = [G.t("patrol.reply." + kind)];
-      if (kind !== "notAppear" && stopped != null) lines.push(G.t(stopped ? "patrol.stoppedReplyYes" : "patrol.stoppedReplyNo"));
+      // 没有人在场（第 37～39 天"自己的巡逻"）：只有"记下了。"
+      const alone = presentSpeaker() === "narrator";
+      const lines = alone ? [G.t("patrol.reply.alone")] : [G.t("patrol.reply." + kind)];
+      if (!alone && kind !== "notAppear" && stopped != null) lines.push(G.t(stopped ? "patrol.stoppedReplyYes" : "patrol.stoppedReplyNo"));
       G.router.show(`
         <div class="stack talk ${presentSpeaker()}">
           ${paras(lines)}
