@@ -49,8 +49,10 @@ Game.content.register("en", "common", {
   },
   fn: {
     // Only in the ?fastday= test mode
-    "test.fastday"({ minutes, day }) {
-      return `Test mode: ${minutes} min = 1 day. It's day ${day}.`;
+    "test.fastday"({ minutes, day, nextDay, inMin }) {
+      const head = `Test mode: ${minutes} min = 1 day. It's day ${day}.`;
+      if (!nextDay) return head;
+      return inMin ? `${head} Next session: day ${nextDay} (in about ${inMin} min; refresh then).` : `${head} The next session is ready now.`;
     },
     "calendar.nextSession"({ day, today }) {
       if (!day) return "Nothing more is scheduled.";

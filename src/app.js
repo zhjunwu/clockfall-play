@@ -91,7 +91,16 @@
     let note = "";
     if (opts.done) note = `<p class="hint">${fmt(G.t("city.doneForToday"))}</p>`;
     // 快进测试模式：城市画面上写明，免得测试的人以为是正式版
-    if (G.config.fastDayMinutes) note = `<p class="hint fastnote">${fmt(G.f("test.fastday", { minutes: G.config.fastDayMinutes, day }))}</p>` + note;
+    // 下一局在第几天、大约几分钟后（只在测试模式出现，玩家永远看不到，不违反"零不预告"）
+    if (G.config.fastDayMinutes) {
+      const m = G.config.fastDayMinutes, st = G.state.get();
+      let nextDay = null, inMin = null;
+      if (next) {
+        nextDay = Math.max(next.earliestDay, st.calendar.sessionDoneOnDay[day] ? day + 1 : day);
+        inMin = nextDay > day ? Math.max(1, Math.ceil((st.startedAt + (nextDay - 1) * m * 60000 - Date.now()) / 60000)) : 0;
+      }
+      note = `<p class="hint fastnote">${fmt(G.f("test.fastday", { minutes: m, day, nextDay, inMin }))}</p>` + note;
+    }
     if (opts.closedNote) note = `<p class="hint">${fmt(G.t("gameDemon.closedIsLeave"))}</p>`;
     let patrolBtn = "";
     if (next) {

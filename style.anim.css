@@ -20,6 +20,8 @@ body.scene-on .backdrop { opacity: 1; }
 .backdrop[data-scene="city"] .alive { background-image: url("assets/img/city-alive.webp"); }
 .backdrop[data-scene="market"] .dead { background-image: url("assets/img/market-dead.webp"); }
 .backdrop[data-scene="market"] .alive { background-image: url("assets/img/market-alive.webp"); }
+.backdrop[data-scene="corridor"] .dead { background-image: url("assets/img/corridor-dead.webp"); }
+.backdrop[data-scene="corridor"] .alive { background-image: url("assets/img/corridor-alive.webp"); }
 /* 钟楼区：冷白窗光层 --cold（1 = 整夜亮着，0 = 熄灭）；琥珀层只有钟面。熄灯慢一些，像一扇扇关掉 */
 .backdrop .cold { opacity: var(--cold, 0); transition: opacity 3s ease; }
 .backdrop.dim .cold, .backdrop.dim[data-scene="tower"] .alive { filter: none; }
@@ -148,6 +150,9 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .feedcard.ghost { position: absolute; inset: 0; margin: auto; height: fit-content; pointer-events: none; animation: cardout .22s ease-in forwards; }
 @keyframes cardin { from { transform: translateY(40%); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes cardout { from { transform: none; opacity: 1; } to { transform: translateY(-60%); opacity: 0; } }
+
+/* 长廊卡片的小场景：12 张亮度一致，不越画越亮 */
+.feedart.art { background-size: cover; background-position: center; filter: saturate(.85) brightness(.92); }
 
 /* ---------- 出口：瞬间静止 ---------- */
 body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none !important; transition: none !important; }

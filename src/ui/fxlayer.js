@@ -42,7 +42,7 @@
   }
 
   // 城区状态：第 2 局（看穿）之后半复苏，第 3 局（救回被俘者）之后复苏。
-  const DISTRICT_OF = { chest: "market", owl: "tower" };
+  const DISTRICT_OF = { chest: "market", owl: "tower", abyss: "corridor" };
   function districtState(level) {
     if (revivedNow[DISTRICT_OF[level]]) return 2;
     try {
@@ -119,8 +119,18 @@
     t.insertBefore(who, t.firstChild);
   }
 
+  // 长廊卡片：色块换成主语对应的小场景（content 的主语按 n % 12 轮换，画也按 n % 12）。
+  function decorateFeedArt() {
+    app.querySelectorAll(".feedcard[data-n] .feedart:not(.art)").forEach((el) => {
+      const n = Number(el.closest(".feedcard").dataset.n) % 12;
+      el.classList.add("art");
+      el.style.backgroundImage = `url(assets/img/feed/s${String(n).padStart(2, "0")}.webp)`;
+    });
+  }
+
   function decorate() {
     if (G.router.current === "prologue") decoratePrologue();
+    decorateFeedArt();
     decorateSpeaker();
     const onCity = G.router.current === "city";
     const level = onCity || document.body.classList.contains("xray") ? null : levelInProgress();
@@ -169,6 +179,7 @@
   // 无底渊：卡片"刷"走。引擎换卡后才发事件，所以每次留一份副本，下一张来时让副本向上滑走（Mary_to_Victoria_V006 二）。
   let lastCard = null;
   on("abyss.card", () => {
+    decorateFeedArt();
     const feed = app.querySelector(".feed");
     const card = feed && feed.querySelector(".feedcard");
     if (!card) return;
