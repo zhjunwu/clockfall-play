@@ -20,8 +20,8 @@
     { id: "zero1", level: "zero", key: "session1", earliestDay: 26, endHook: "none", playable: true, nameRightLine: "zero1.youKnowIt" },
     { id: "zero2", level: "zero", key: "session2", earliestDay: 28, endHook: "cliffhanger", flagId: "flag.cliffhangerZero", playable: true },
     { id: "zero3", level: "zero", key: "session3", earliestDay: 31, endHook: "none", playable: true },
-    { id: "zero4", level: "zero", key: "session4", earliestDay: 34, endHook: "tbd" },
-    { id: "zero5", level: "zero", key: "session5", earliestDay: 36, endHook: "none" },
+    { id: "zero4", level: "zero", key: "session4", earliestDay: 34, endHook: "none", playable: true },
+    { id: "zero5", level: "zero", key: "session5", earliestDay: 36, endHook: "none", playable: true },
   ];
 
   function beatsOf(session) {

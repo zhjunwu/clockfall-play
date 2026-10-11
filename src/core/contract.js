@@ -208,7 +208,10 @@
       "zero2.howItHappened", "zero2.earliestQ", "zero2.earliestDone", "zero2.tower", "flag.cliffhangerZero",
       "zero3.eyebrow", "zero3.found", "zero3.zeroAway", "zero3.jarEnter", "zero3.zeroTrail", "zero3.pickQ", "zero3.candidates", "zero3.editHint", "zero3.typeToggle",
       "zero3.typePlaceholder", "zero3.useIt", "zero3.sayIt", "zero3.editAgain", "zero3.cracked", "zero3.jarAgain", "zero3.vowWords", "zero3.jarVow", "zero3.zeroVow",
-      "zero3.jarLeave", "zero3.zeroAsk"],
+      "zero3.jarLeave", "zero3.zeroAsk",
+      "zero4.eyebrow", "zero4.asleep", "zero4.companion", "zero4.enter", "zero4.nodes", "zero4.whisper", "zero4.holdFirst", "zero4.tapIt", "zero4.wrong", "zero4.useLine",
+      "zero4.speedBack", "zero4.gestureJar", "zero4.sitQ", "zero4.sit", "zero4.sitting", "zero4.slowed", "zero4.cantGoBack", "zero4.sayLine", "zero4.clockMoves", "zero4.awake", "zero4.fallbackLine",
+      "zero5.back", "zero5.shorter", "zero5.clock", "zero5.notErased", "zero5.forYou", "zero5.welcome", "zero5.giveBack", "zero5.ownPatrol"],
     fns: ["zero1.companionNews"],
   };
 

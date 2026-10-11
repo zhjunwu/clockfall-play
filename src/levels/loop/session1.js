@@ -252,4 +252,6 @@
 
   G.levels.loop = G.levels.loop || {};
   G.levels.loop.session1 = session1;
+  G.levels.loop.ringHtml = ringHtml;
+  G.levels.loop.gesture = gesture;
 })();

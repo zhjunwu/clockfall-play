@@ -4,9 +4,17 @@
 
   // 触屏"幽灵点击"（Mary_V063 A1）：按住完成后屏幕立刻换了，手指还按着；抬起时浏览器会在同一位置合成一次点击，
   // 落到新屏幕的按钮上替玩家作答。办法：按住完成时"吞掉"这根手指抬起前后的点击——直到抬起，再加 400 ms。
-  let swallowUntilUp = false, swallowUntil = 0;
+  // 保险：如果"抬起"事件丢了（例如触摸被系统取消），最多吞 3 秒就自动放开，免得之后所有点击都失效
+  let swallowUntilUp = false, swallowUntil = 0, swallowCap = null;
   function armSwallow() {
     swallowUntilUp = true;
+    clearTimeout(swallowCap);
+    swallowCap = setTimeout(() => {
+      if (swallowUntilUp) {
+        swallowUntilUp = false;
+        swallowUntil = performance.now() + 400;
+      }
+    }, 3000);
   }
   const lift = () => {
     if (!swallowUntilUp) return;
