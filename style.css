@@ -355,7 +355,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 @media (prefers-reduced-motion: reduce) { .choices2 .btn-choice.grow.strain { animation: none; } }
 
 /* 无底渊：长廊卡片流。只在卡片区禁下拉刷新与横向手势；出口固定，不被划动区覆盖 */
-.feed { min-height: 52vh; display: grid; place-items: center; overscroll-behavior: none; touch-action: none; user-select: none; outline: none; }
+.feed { min-height: 52vh; display: grid; place-items: center; user-select: none; }
+.feedlayer { position: fixed; inset: 0; z-index: 4; overscroll-behavior: none; touch-action: none; outline: none; }
 .feedcard { width: 100%; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
 .feedart { display: block; height: 30vh; border-radius: 10px; background: linear-gradient(160deg, hsl(var(--hue) 30% 32%), hsl(calc(var(--hue) + 40) 25% 18%)); }
 .swipehint { text-align: center; }

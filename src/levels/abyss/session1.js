@@ -24,8 +24,10 @@
       if (has || G.state.get().flags.cueInviteSent.abyss) return;
       G.state.update((s) => (s.flags.cueInviteSent.abyss = true));
       await talk({ speaker: "zero", lines: G.t("abyss.mapAsk") });
+      // 预填：零按时段猜的那一条 + "刷动态"，直接到汇总屏，玩家改或确认（同夜枭第 1 局）
       const pre = G.t("abyss.cuePrefill");
-      const r = await G.mapform.ask({ intro: false, allowSkip: true, prefill: pre && typeof pre === "object" ? pre : {}, startAtSummary: true });
+      const prefill = Object.assign({}, G.map.guess() || {}, pre && typeof pre === "object" ? pre : {});
+      const r = await G.mapform.ask({ intro: false, allowSkip: true, prefill, startAtSummary: true });
       if (r.cue) {
         G.map.add(r.cue);
         await talk({ speaker: "zero", lines: G.t("abyss.mapDone") });

@@ -1,5 +1,5 @@
 // 无底渊：没有底的长廊（Mary_V006 3.1，Mary_V040 B1、C1、C2）。
-// 竖向卡片流，一屏一张。卡片不自己走：只在玩家往上划（或滚轮、方向键、点卡片）时前进；张数 = 玩家真实看到的张数。
+// 竖向卡片流，一屏一张。手势挂在一个全屏层上（Mary_V041 A1：下半屏也要能划）。卡片不自己走：只在玩家往上划（或滚轮、方向键、点卡片）时前进；张数 = 玩家真实看到的张数。
 // 没有滚动条、页码、时钟。"出去"按钮固定在右下角，一直在。2 分 30 秒是上限，到点卡片停住。
 // 然后问估计（时间、张数），再亮出真实数据，按区间判定（两边各放宽半档）。
 (function () {
@@ -21,12 +21,16 @@
         <div class="stack">
           <p class="eyebrow">${fmt(G.t("abyss.eyebrow"))}</p>
         </div>
-        <div class="feed" id="feed" tabindex="0" aria-live="polite">${cardHtml(0)}</div>
+        <div class="feed" id="feed" aria-live="polite">${cardHtml(0)}</div>
         <p class="hint swipehint" id="swipehint">${fmt(G.t("abyss.swipeHint"))}</p>
+        <div class="feedlayer" id="feedlayer" tabindex="0" aria-label="${esc(G.text("abyss.swipeHint"))}"></div>
         <div class="feedexit">${btn("exit", G.t("abyss.exit"), "btn-quiet")}</div>
       `, { name: "abyss-feed" });
       const $ = G.router.$;
       const box = $("#feed");
+      // 整个屏幕都是划动区（拇指在下半屏）："出去"在它上面；下拉刷新、回弹都在这一层禁掉
+      const layer = $("#feedlayer");
+      layer.focus();
       const start = Date.now();
       let n = 0, done = false, y0 = null;
 
@@ -48,18 +52,18 @@
       }
       const cap = setTimeout(() => finish(false), CAP_MS);
 
-      box.addEventListener("pointerdown", (e) => (y0 = e.clientY));
-      box.addEventListener("pointerup", (e) => {
+      layer.addEventListener("pointerdown", (e) => (y0 = e.clientY));
+      layer.addEventListener("pointerup", (e) => {
         if (y0 == null) return;
         const dy = e.clientY - y0;
         y0 = null;
         // 往上划；几乎没动就当作点了一下（无障碍）
         if (dy < -SWIPE_PX || Math.abs(dy) < 6) next();
       });
-      box.addEventListener("wheel", (e) => {
+      layer.addEventListener("wheel", (e) => {
         if (e.deltaY > 20) next();
       }, { passive: true });
-      box.addEventListener("keydown", (e) => {
+      layer.addEventListener("keydown", (e) => {
         if (e.key === "ArrowDown" || e.key === " " || e.key === "PageDown") {
           e.preventDefault();
           next();
