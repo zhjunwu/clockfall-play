@@ -189,11 +189,23 @@
     fns: ["abyss3.task.q", "abyss3.doorLabel", "abyss3.hideTimeRebut", "abyss3.result"],
   };
 
+  // M11：第 25 天"圈"
+  const m11 = {
+    ids: [
+      "loop.eyebrow", "loop.pinIntro", "loop.notThree", "loop.slots", "loop.wallNodes", "loop.baker", "loop.watchman", "loop.messenger", "loop.manyNights", "loop.seen",
+      "loop.yours", "loop.mine.hint", "loop.mine.options", "loop.mine.empty", "loop.mine.done", "loop.mine.saved", "loop.noCrack", "loop.cutOne",
+      "loop.practice.eyebrow", "loop.practice.intro", "loop.practice.whisper", "loop.practice.tapDemon", "loop.practice.again", "loop.practice.right",
+      "loop.gesture.chest", "loop.gesture.owl", "loop.gesture.abyss", "loop.gesture.alt", "loop.practice.stopped", "loop.demonNames",
+      "loop.cutQ", "loop.cutMine", "loop.cutDone", "loop.stare",
+    ],
+    fns: ["loop.cueLabel", "loop.cracks", "loop.cutHow"],
+  };
+
   G.contract = {
     enums,
-    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10 },
+    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11 },
     // 每种语言当前要求齐全的里程碑
-    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10"] },
+    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10"] },
     idsFor(lang) {
       return (this.requiredByLang[lang] || []).flatMap((m) => this.milestones[m].ids);
     },

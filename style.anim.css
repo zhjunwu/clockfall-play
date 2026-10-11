@@ -2,6 +2,20 @@
    时长基准：呼吸 2.5s，进出场 .3s，复苏与走格 1.2s，没有任何东西快于 .2s。
    颜色只用 style.css 的 token；红只给魔鬼（--demon-red）。
    光的语法：琥珀 = 夺回的；青 = 看见的；红 = 魔鬼本身；冷白（--tempt）= 屏幕在拉你。 */
+/* ---------- 字体（Mary_V058：首屏 Google 中文字体 1.36 MB，超 400 KB 预算） ----------
+   正文、数据、一般标题用系统字体；衬线子集只给游戏名（900，4 KB）和开场故事（600，81 KB），自托管。
+   浏览器只下载真正用到的网页字体，所以 index.html 里 Google Fonts 的 <link> 不再触发任何字体下载。
+   子集由 tools/fonts/make-subset.py 从 Noto Serif SC 生成（SIL OFL 1.1，见 assets/fonts/OFL.txt）；开场文字改了要重跑。 */
+@font-face { font-family: "Clockfall Serif"; font-weight: 600; font-display: swap; src: url("assets/fonts/clockfall-serif-600.woff2") format("woff2"); }
+@font-face { font-family: "Clockfall Serif"; font-weight: 900; font-display: swap; src: url("assets/fonts/clockfall-serif-900.woff2") format("woff2"); }
+:root {
+  --font-body: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+  --font-display: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+  --font-data: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+.langtitle, body.scene-city .stack.center > h1 { font-family: "Clockfall Serif", var(--font-display); font-weight: 900; }
+.prologue-text { font-family: "Clockfall Serif", var(--font-display); font-weight: 600; }
+
 :root {
   /* 诱惑色：屏幕的冷光。与空壳人眼里的方形光、钟楼区的满窗冷光同一种光。
      只用于"被偷"演示里想让玩家点的东西（放大的"再看一集"、深夜电视）。 */
@@ -78,6 +92,25 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .messengerlane .walker.art svg { width: 100%; height: 100%; display: block; }
 .messengerlane .walker.art.stopped { background: none; color: var(--gold); filter: drop-shadow(0 0 6px rgba(227, 169, 58, .5)); }
 
+/* 第 25 天的发呆（"圈"之局）：零离小红点更近（Mary V055）。请 Mark 在那一屏的 .stare 上加 .near */
+.stare.near .stareart .zeroshape { left: 64px; }
+
+/* ---------- 圈（G.art.ring）：墙上的线、图钉、裂缝；练习圈慢慢转，小像保持正立 ---------- */
+.ring { position: relative; width: min(84vw, 340px); aspect-ratio: 1; margin: 8px auto; }
+.ring .rot { position: absolute; inset: 0; }
+.ring .thread { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ring .node { position: absolute; width: 21%; transform: translate(-50%, -50%); }
+.ring .upright { position: relative; display: flex; flex-direction: column; align-items: center; }
+.ring .upright > svg, .ring .upright > .chest { width: 100%; aspect-ratio: 1; display: block; }
+.ring .upright > .chest { pointer-events: none; }
+.ring .pin { position: absolute; top: 9%; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #8f94a3; box-shadow: 0 1px 2px #000; z-index: 1; }
+.ring .nlabel { margin-top: 2px; font-size: .72rem; line-height: 1.3; color: var(--muted); text-align: center; white-space: nowrap; }
+.ring .node.on .upright { filter: drop-shadow(0 0 8px rgba(98, 214, 198, .7)); }
+.ring .node-zero .upright > svg { width: 80%; }
+.ring.spin .rot { animation: ringspin 48s linear infinite; }
+.ring.spin .upright { animation: ringspin 48s linear infinite reverse; }
+@keyframes ringspin { to { transform: rotate(360deg); } }
+
 /* ---------- 空壳人：方形冷光极慢起伏，不规律，不闪（Mary_to_Victoria_V002 三） ---------- */
 .art-hollow .glare { opacity: .6; animation: glare 11s ease-in-out infinite; }
 .art-hollow:nth-child(2n) .glare { animation-duration: 13.7s; animation-delay: -4s; }
@@ -117,6 +150,12 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .btn-choice.tempt { border-color: var(--tempt-solid); color: #f4f8fb; box-shadow: 0 0 18px var(--tempt); }
 .choices2 .btn-choice.grow { box-shadow: 0 0 calc(18px + 14px * (var(--grow) - 1)) var(--tempt); }
 .tv .cliff { color: #eef4f8; }
+/* 电视"在播"：屏幕里有慢慢移动的冷光影，像画面在变（Mary V039 C1）。抽象的光，不是任何 App 的界面 */
+.tv { position: relative; overflow: hidden; }
+.tv:has(.playing:not([hidden]))::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 40% 60% at 30% 40%, rgba(207, 227, 240, .14), transparent 70%), radial-gradient(ellipse 35% 50% at 70% 60%, rgba(140, 170, 210, .12), transparent 70%);
+  background-size: 200% 200%; animation: onscreen 3.2s ease-in-out infinite alternate; }
+@keyframes onscreen { from { background-position: 0% 0%, 100% 100%; } to { background-position: 100% 60%, 0% 30%; } }
 .tv { animation: screenflicker 9s ease-in-out infinite; }
 @keyframes screenflicker { 0%, 100% { box-shadow: 0 0 36px rgba(207, 227, 240, .10), inset 0 0 40px rgba(207, 227, 240, .06); } 50% { box-shadow: 0 0 44px rgba(207, 227, 240, .16), inset 0 0 48px rgba(207, 227, 240, .09); } }
 
@@ -193,6 +232,10 @@ body.scene-city .stack.center { margin-top: 6vh; }
 @keyframes drawdoor { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
 .wall.lit .drawn { box-shadow: 0 0 14px rgba(98, 214, 198, .45), inset 0 0 10px rgba(98, 214, 198, .25); transition: box-shadow 1.2s ease; }
 .wall.open .drawn { border-color: var(--gold); background: radial-gradient(ellipse 60% 70% at 50% 60%, rgba(227, 169, 58, .55), rgba(227, 169, 58, .08) 75%); box-shadow: 0 0 26px rgba(227, 169, 58, .35); transition: all 1.2s ease; }
+/* 门变暗、门外一片灰（Mary V053）：明显暗下去，但仍看得见、点得到 */
+.walldoor.dim .doorbtn, .walldoor.lit.dim .doorbtn { border: 1px solid var(--grey); color: var(--grey); background: #0d0f14; box-shadow: none; opacity: 1; filter: grayscale(1); transition: all 1.2s ease; }
+.walldoor.dim::after { content: ""; position: absolute; inset: -8px; border-radius: 14px; background: radial-gradient(ellipse at 50% 50%, rgba(91, 96, 112, .25), transparent 70%); pointer-events: none; }
+
 /* 图鉴第四格"现实里的门"：不是待解锁。青色虚线、正常字色，没有锁、没有灰（Mary_V049） */
 .codexcell.outside { border: 1px dashed rgba(98, 214, 198, .5); color: var(--ink); }
 .codexcell.outside small { color: var(--muted); }
@@ -206,7 +249,7 @@ body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none 
   .art-clock .hand { transition: none; }
   .chest.art.shattered svg { animation: none; opacity: .7; }
   .feedcard.enter { animation: fadein .25s ease-out; }
-  .pa-rings circle, .pa-demons .slip, .art-game .rise, .tv { animation: none; }
+  .pa-rings circle, .pa-demons .slip, .art-game .rise, .tv, .tv::before, .ring.spin .rot, .ring.spin .upright { animation: none; }
   .ghostdoor { animation: fadeout .6s ease-out forwards; }
   .wall.drawn-in .drawn { animation: none; }
   .pa-rings circle:first-child { opacity: .3; transform: scale(1.8); }

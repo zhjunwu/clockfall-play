@@ -420,3 +420,22 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .fadein:not([hidden]) { animation: fadeIn .8s ease-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .stareart .zeroshape::after, .stareart .reddot, .fadein:not([hidden]) { animation: none; } .walldoor { transition: none; } .messengerlane .walker { transition: none; } }
+
+/* 第 25 天"圈"（占位；Victoria 的 Game.art.loopRing 到了以后由它接管） */
+.loopring { position: relative; width: min(300px, 80vw); aspect-ratio: 1; margin: 8px auto; }
+.loopring .loopline { position: absolute; inset: 12%; border: 2px solid var(--line); border-radius: 50%; }
+.loopring.spin .loopline { animation: loopSpin 14s linear infinite; border-top-color: var(--muted); }
+.loopnode { position: absolute; transform: translate(-50%, -50%); max-width: 44%; text-align: center; font-size: .8rem; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 6px 8px; color: var(--ink); font-family: inherit; }
+button.loopnode { cursor: pointer; }
+.loopnode.active { border-color: var(--xray); box-shadow: 0 0 10px var(--xray); }
+.loopring .crack { position: absolute; left: 50%; top: 50%; width: 2px; height: 16px; background: var(--gold); transform: rotate(var(--r)) translateY(calc(-1 * min(300px, 80vw) * .38)); transform-origin: center; }
+.loopslot { border-top: 1px solid var(--line); padding-top: 6px; }
+.chip.on { border-color: var(--gold); color: var(--gold); }
+.btn-choice.suggested { border-color: var(--gold); }
+.gesturepad { height: 22vh; border: 1px dashed var(--line); border-radius: 12px; position: relative; touch-action: none; }
+.gesturepad .gesturehandle { position: absolute; left: 50%; top: 20%; width: 34px; height: 34px; margin-left: -17px; border-radius: 50%; border: 2px solid var(--muted); }
+.gesturepad.done { border-color: var(--gold); }
+.gesturepad.done .gesturehandle { border-color: var(--gold); }
+.stare.near .zeroshape { left: 64px; }
+@keyframes loopSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .loopring.spin .loopline { animation: none; } }

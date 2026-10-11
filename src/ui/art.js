@@ -130,6 +130,38 @@
 
   const portraits = { owl, abyss, demon: gameDemon, chest: chestFace, jar };
 
+  // ---------- "圈"（design 6.6、Mark_V067）：墙上钉着的魔鬼连成一个圈 ----------
+  // nodes：[{ who: "dot"|"chest"|"abyss"|"owl"|"jar"|"zero", label?: 已转义的 HTML, on?: true }]，从 12 点起顺时针排。
+  // cracks：玩家现实中"停"过的次数，画成圈上的琥珀断口（最多画 12 道）。spin：练习圈 / 联手战里慢慢转。
+  // zero 那一格是"孤单那一环"：不钉图钉。只有图形；文字由引擎通过 label 传进来。
+  const reddot = `<svg class="art-demon art-dot" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="11" fill="var(--demon-red)"/><path d="M47 29 L51 29 L51 33 Z" fill="#0b0d12"/></svg>`;
+  function ring(opts) {
+    opts = opts || {};
+    const nodes = opts.nodes || [], n = nodes.length || 1, R = 38;
+    const pos = (i) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; return [50 + R * Math.cos(a), 50 + R * Math.sin(a)]; };
+    let arrows = "";
+    for (let i = 0; i < n; i++) {
+      const a = ((i + 0.5) / n) * 2 * Math.PI - Math.PI / 2, x = 50 + R * Math.cos(a), y = 50 + R * Math.sin(a), deg = (a * 180) / Math.PI + 90;
+      arrows += `<path d="M-1.6 -1.4 L1.6 0 L-1.6 1.4" transform="translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${(deg - 90).toFixed(1)})" fill="none" stroke="#5b6070" stroke-width=".5"/>`;
+    }
+    let cracks = "";
+    const c = Math.min(12, Math.max(0, opts.cracks | 0));
+    for (let k = 0; k < c; k++) {
+      const a = ((k * 0.381966 + 0.13) % 1) * 2 * Math.PI - Math.PI / 2;  // 黄金比例错开，不和节点重叠得太整齐
+      const x = 50 + R * Math.cos(a), y = 50 + R * Math.sin(a), deg = (a * 180) / Math.PI;
+      cracks += `<g transform="translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${deg.toFixed(1)})"><rect x="-2.4" y="-.9" width="4.8" height="1.8" fill="#0b0d12"/><path d="M-2.2 -1.2 L-1 0 L-2 1.3 M1.6 -1.3 L.8 .1 L2 1.2" stroke="var(--gold)" stroke-width=".5" fill="none"/></g>`;
+    }
+    const items = nodes.map((nd, i) => {
+      const [x, y] = pos(i);
+      const art = nd.who === "zero" ? zero : nd.who === "dot" ? reddot : portraits[nd.who] || "";
+      const pin = nd.who === "zero" ? "" : `<i class="pin"></i>`;
+      return `<div class="node node-${nd.who}${nd.on ? " on" : ""}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%"><div class="upright">${pin}${art}${nd.label ? `<span class="nlabel">${nd.label}</span>` : ""}</div></div>`;
+    }).join("");
+    return `<div class="ring${opts.spin ? " spin" : ""}" aria-hidden="true"><div class="rot">
+      <svg class="thread" viewBox="0 0 100 100"><circle cx="50" cy="50" r="${R}" fill="none" stroke="#5b6070" stroke-width=".6" stroke-dasharray="1.2 .8"/>${arrows}${cracks}</svg>
+      ${items}</div></div>`;
+  }
+
   // ---------- 开场故事的画面（Mark_to_Victoria_V009 的 10 页）。只用现有背景图与 SVG，不新增图片。 ----------
   const bg = (name, cls) => `<div class="pa-bg ${cls || ""}" style="background-image:url(assets/img/${name}.webp)"></div>`;
 
@@ -192,5 +224,5 @@
     return scenes[name] ? scenes[name]() : "";
   }
 
-  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker };
+  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker, ring };
 })();

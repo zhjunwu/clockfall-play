@@ -123,6 +123,15 @@
     t.insertBefore(who, t.firstChild);
   }
 
+  // 长廊卡片：色块换成主语对应的小场景（content 的主语按 n % 12 轮换，画也按 n % 12）。
+  function decorateFeedArt() {
+    app.querySelectorAll(".feedcard[data-n] .feedart:not(.art)").forEach((el) => {
+      const n = Number(el.closest(".feedcard").dataset.n) % 12;
+      el.classList.add("art");
+      el.style.backgroundImage = `url(assets/img/feed/s${String(n).padStart(2, "0")}.webp)`;
+    });
+  }
+
   // 无底渊第 3 局：零发呆那一屏换成零的剪影；走向长廊的信使换成人形剪影（Mark_to_Victoria_V011）
   function decorateAbyss3() {
     const z = app.querySelector(".stareart .zeroshape:not(.art)");
@@ -131,17 +140,20 @@
     if (w) { w.classList.add("art"); w.innerHTML = G.art.walker; }
   }
 
-  function decorate() {
-    if (G.router.current === "prologue") decoratePrologue();
-    decorateFeedArt();
-    decorateSpeaker();
-    decorateAbyss3();
+  // 场景背景：城市、城区、零发呆
+  function decorateScene() {
     const onCity = G.router.current === "city";
+    // 零发呆：背景是安睡态的钟楼区，"回家路上停住了"（Mark V065 第 3 条、Mary V053）
+    const staring = !!app.querySelector(".stare");
     const level = onCity || document.body.classList.contains("xray") ? null : levelInProgress();
     const district = DISTRICT_OF[level];
     document.body.classList.toggle("scene-city", onCity);
-    document.body.classList.toggle("scene-on", onCity || !!district);
-    if (onCity) {
+    document.body.classList.toggle("scene-on", onCity || !!district || staring);
+    if (staring) {
+      setScene("tower", true);
+      setWarmth(100);
+      setCold(0);
+    } else if (onCity) {
       setScene("city", false);
       setCold(0);
       decorateCity();
@@ -151,7 +163,19 @@
       setWarmth(st * 50);
       setCold(district === "tower" ? 1 - st / 2 : 0);
     }
-    decorateChest();
+  }
+
+  // 每一步各自独立：一步出错（比如引擎改了某个类名）只丢那一处画面，不拖垮其他步，也不影响游戏本身。
+  // 错误照样打到控制台，tools/art/smoke.sh 会把它当失败。
+  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest];
+  function decorate() {
+    STEPS.forEach((step) => {
+      try {
+        step();
+      } catch (e) {
+        console.error("fxlayer", e);
+      }
+    });
   }
 
   new MutationObserver(decorate).observe(app, { childList: true });
