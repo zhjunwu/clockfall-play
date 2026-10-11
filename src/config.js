@@ -8,6 +8,12 @@
     devEnabled: params.get("dev") === "1",
     // 试玩模式：?playtest=1 开启事件日志并持久化这个开关。
     playtestParam: params.get("playtest") === "1",
+    // 测试用快进：?fastday=1 表示真实 1 分钟 = 游戏 1 天（一天里的钟点仍是真实钟点，深夜规则照常）。
+    // 用于内部预演按日历走第 1、3、6 天而不用真的等。使用独立存档，不碰真实存档。
+    fastDayMinutes: (() => {
+      const v = parseFloat(params.get("fastday"));
+      return v > 0 && v <= 1440 ? v : 0;
+    })(),
 
     // 时间
     dayStartHour: 6, // 游戏日边界：本地 06:00

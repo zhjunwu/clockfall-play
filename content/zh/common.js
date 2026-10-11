@@ -23,6 +23,7 @@ Game.content.register("zh", "common", {
     "playtest.export": "导出试玩数据",
     "playtest.sendHint": "点一下，发给邀请你的人。里面只有你点了什么，没有你写的话。",
     "playtest.copied": "已复制。粘贴发给邀请你的人。",
+    "playtest.manualCopy": "长按下面的文字，全选、复制，再发给邀请你的人。",
     // 称号（只看游戏内事件）与"自动停"状态（分开显示）
     "title.earned": "你现在是",
     "title.stolen": "被偷者",
@@ -47,6 +48,10 @@ Game.content.register("zh", "common", {
     "dev.title": "开发",
   },
   fn: {
+    // 只在 ?fastday= 测试模式出现
+    "test.fastday"({ minutes, day }) {
+      return `测试模式：${minutes} 分钟 = 1 天。现在是第 ${day} 天。`;
+    },
     // 日历图标点开后的说明。零不主动预告，只有玩家点开才看到。
     "calendar.nextSession"({ day, today }) {
       if (!day) return "没有下一局了。";

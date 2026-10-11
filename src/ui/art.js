@@ -88,5 +88,67 @@
     <rect class="glare" x="14" y="15" width="12" height="7" rx="1" fill="#cfe3f0"/>
   </svg>`;
 
-  G.art = { clock, hero, zero, chest, hollow };
+  // ---------- 开场故事的画面（Mark_to_Victoria_V009 的 10 页）。只用现有背景图与 SVG，不新增图片。 ----------
+  const bg = (name, cls) => `<div class="pa-bg ${cls || ""}" style="background-image:url(assets/img/${name}.webp)"></div>`;
+
+  // 钟声：大钟加三圈慢慢散开的波纹
+  const bell = `<div class="pa-center">${clock(100)}<svg class="pa-rings" viewBox="0 0 200 200" aria-hidden="true">
+    <circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="60"/></svg></div>`;
+
+  // 魔鬼：城墙剪影，墙缝里溜进三个小影子（宝箱、猫头鹰、长廊口），只露红点眼。小、油滑、看不清
+  const demons = `<svg class="pa-demons" viewBox="0 0 360 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2233"/><stop offset="1" stop-color="#0b0d12"/></linearGradient></defs>
+    <rect width="360" height="240" fill="url(#dusk)"/>
+    <path d="M0 120 h40 v-14 h14 v14 h30 v-14 h14 v14 h40 v-14 h14 v14 h44 v-14 h14 v14 h40 v-14 h14 v14 h92 V240 H0 Z" fill="#07090d"/>
+    <path d="M118 120 l6 40 l-8 30 l10 50" stroke="#1b2130" stroke-width="5" fill="none"/>
+    <path d="M232 120 l-5 36 l9 34 l-6 50" stroke="#1b2130" stroke-width="5" fill="none"/>
+    <g class="slip s1"><path d="M96 214 h28 v-12 q-14 -10 -28 0 z" fill="#05060a"/><circle cx="104" cy="204" r="1.8" fill="var(--demon-red)"/><circle cx="116" cy="204" r="1.8" fill="var(--demon-red)"/></g>
+    <g class="slip s2"><path d="M226 180 q10 -18 20 0 q-2 22 -10 26 q-8 -4 -10 -26 z" fill="#05060a"/><circle cx="232" cy="186" r="1.6" fill="var(--demon-red)"/><circle cx="240" cy="186" r="1.6" fill="var(--demon-red)"/></g>
+    <g class="slip s3"><path d="M300 236 l14 -40 h10 l14 40 z" fill="#05060a"/><circle cx="319" cy="212" r="1.6" fill="var(--demon-red)"/></g>
+  </svg>`;
+
+  // 空壳人：死去的城，三个空壳人，头顶同一个凝住的梦泡
+  const hollowScene = `${bg("city-dead", "dim")}<div class="pa-hollows">
+    <svg class="pa-dream" viewBox="0 0 120 50" aria-hidden="true"><ellipse cx="60" cy="22" rx="46" ry="18"/><circle cx="34" cy="44" r="4"/><circle cx="26" cy="48" r="2"/><path d="M42 24 q18 -12 36 0" fill="none"/></svg>
+    ${hollow}${hollow}${hollow}</div>`;
+
+  // 无尽长廊：一点透视，门框一层层缩小，没有尽头
+  let frames = "";
+  for (let i = 2; i < 11; i++) {
+    const k = Math.pow(0.72, i), w = 150 * k, h = 200 * k;
+    frames += `<rect x="${(180 - w / 2).toFixed(1)}" y="${(118 - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" opacity="${(1.2 - i * 0.1).toFixed(2)}"/>`;
+  }
+  const corridor = `<svg class="pa-corridor" viewBox="105 8 150 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="360" height="240" fill="#0b0d12"/><g fill="none" stroke="var(--grey)" stroke-width="2">${frames}</g>
+    <path d="M30 18 L176 116 M330 18 L184 116 M30 218 L176 120 M330 218 L184 120" stroke="#2a3140" stroke-width="1.5"/></svg>`;
+
+  const districts = `<div class="pa-tri">
+    <div>${bg("market-dead")}</div>
+    <div>${bg("tower-dark")}${bg("tower-cold", "glow")}</div>
+    <div>${corridor}</div></div>`;
+
+  // 钟摆：停在弧线最高点的一瞬
+  const pendulum = `<svg class="pa-pendulum" viewBox="0 0 360 240" aria-hidden="true">
+    <path d="M63 153 A182 182 0 0 0 297 153" fill="none" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 6"/>
+    <circle cx="180" cy="14" r="5" fill="var(--gold-deep)"/>
+    <g class="arm"><line x1="180" y1="14" x2="180" y2="178" stroke="var(--gold-deep)" stroke-width="3"/>
+    <circle cx="180" cy="196" r="18" fill="#141821" stroke="var(--gold)" stroke-width="3"/></g></svg>`;
+
+  const scenes = {
+    clock: () => bg("city-alive"),
+    bell: () => bell,
+    demons: () => demons,
+    hollow: () => hollowScene,
+    districts: () => districts,
+    hero: () => `<div class="pa-hero dimlamp">${hero}</div>`,
+    pendulum: () => pendulum,
+    way: () => `${bg("city-dead", "dim low")}<div class="pa-road"></div><div class="pa-hero">${hero}</div>`,
+    dawn: () => `${bg("city-alive", "dawn")}`,
+    flag: () => "",
+  };
+  function prologue(name) {
+    return scenes[name] ? scenes[name]() : "";
+  }
+
+  G.art = { clock, hero, zero, chest, hollow, prologue };
 })();

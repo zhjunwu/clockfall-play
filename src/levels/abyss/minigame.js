@@ -109,4 +109,5 @@
 
   G.levels.abyss = G.levels.abyss || {};
   G.levels.abyss.minigame = minigame;
+  G.levels.abyss.cardHtml = cardHtml;
 })();

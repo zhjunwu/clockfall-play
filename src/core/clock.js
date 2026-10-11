@@ -42,6 +42,15 @@
     return h >= fromHour || h < startHour;
   }
 
+  // 快进：从开始起每过 minutes 分钟，日期往后推一天，钟点不变
+  function _fastNow(realNow, startedAt, minutes) {
+    if (!minutes || !startedAt) return realNow;
+    const n = Math.max(0, Math.floor((realNow - startedAt) / (minutes * 60000)));
+    const d = new Date(realNow);
+    d.setDate(d.getDate() + n);
+    return d.getTime();
+  }
+
   function _weekOf(day) {
     return Math.ceil(day / 7);
   }
@@ -59,6 +68,7 @@
       if (o.hour < cfg().dayStartHour) d.setDate(d.getDate() + 1);
       return d.getTime();
     }
+    if (cfg().fastDayMinutes && s.startedAt) return _fastNow(Date.now(), s.startedAt, cfg().fastDayMinutes);
     return Date.now();
   }
 
@@ -123,5 +133,5 @@
     });
   }
 
-  G.clock = { DAY, _dayStart, _dayOf, _isLateNight, _weekOf, devOverride, now, today, touch, isLateNight, weekOf, canPlay, nextSession, markSessionDone, dayOfTimestamp };
+  G.clock = { DAY, _dayStart, _dayOf, _isLateNight, _fastNow, _weekOf, devOverride, now, today, touch, isLateNight, weekOf, canPlay, nextSession, markSessionDone, dayOfTimestamp };
 })();

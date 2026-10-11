@@ -2,7 +2,7 @@
 (function () {
   const G = window.Game;
   // 开发模式用独立的存储键，走查不会污染真实存档。
-  const KEY = G.config.devEnabled ? "clockfall.state.dev" : "clockfall.state";
+  const KEY = G.config.devEnabled ? "clockfall.state.dev" : G.config.fastDayMinutes ? "clockfall.state.fast" : "clockfall.state";
   const VERSION = 1;
 
   function defaults() {

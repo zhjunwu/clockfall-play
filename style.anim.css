@@ -20,6 +20,12 @@ body.scene-on .backdrop { opacity: 1; }
 .backdrop[data-scene="city"] .alive { background-image: url("assets/img/city-alive.webp"); }
 .backdrop[data-scene="market"] .dead { background-image: url("assets/img/market-dead.webp"); }
 .backdrop[data-scene="market"] .alive { background-image: url("assets/img/market-alive.webp"); }
+/* 钟楼区：冷白窗光层 --cold（1 = 整夜亮着，0 = 熄灭）；琥珀层只有钟面。熄灯慢一些，像一扇扇关掉 */
+.backdrop .cold { opacity: var(--cold, 0); transition: opacity 3s ease; }
+.backdrop.dim .cold, .backdrop.dim[data-scene="tower"] .alive { filter: none; }
+.backdrop[data-scene="tower"] .dead { background-image: url("assets/img/tower-dark.webp"); }
+.backdrop[data-scene="tower"] .cold { background-image: url("assets/img/tower-cold.webp"); }
+.backdrop[data-scene="tower"] .alive { background-image: url("assets/img/tower-amber.webp"); transition-delay: 1.5s; }
 /* 文字区上方压一层夜色，保证对比度 */
 .backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11, 13, 18, .55), rgba(11, 13, 18, .2) 30%, rgba(11, 13, 18, .35) 60%, rgba(11, 13, 18, .6) 85%, var(--night) 100%); }
 .stage { position: relative; z-index: 1; }
@@ -93,6 +99,51 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .tvclock { color: var(--muted); transition: color 1.2s ease; }
 .tvclock.past { color: var(--tempt-solid); }
 
+/* ---------- 开场故事的画面（.prologue-art.pa） ---------- */
+.prologue-art.pa { position: relative; overflow: hidden; background: var(--night); animation: fadein .6s ease-out; }
+.pa-bg { position: absolute; inset: 0; background-size: cover; background-position: center 30%; }
+.pa-bg.dim { filter: brightness(.6); }
+.pa-bg.low { background-position: center 85%; }
+.pa-bg.dawn { -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 35%, transparent 75%); mask-image: radial-gradient(ellipse 60% 70% at 50% 40%, #000 35%, transparent 75%); filter: sepia(.35) brightness(1.1) contrast(.85); }
+.pa-center { position: absolute; inset: 0; display: grid; place-items: center; }
+.pa-center .art-clock { width: min(60%, 200px); height: auto; grid-area: 1 / 1; }
+.pa-rings { grid-area: 1 / 1; width: min(60%, 200px); overflow: visible; }
+.pa-rings circle { fill: none; stroke: var(--gold); stroke-width: 1.2; opacity: 0; transform-origin: 100px 100px; animation: ring 6s ease-out infinite; }
+.pa-rings circle:nth-child(2) { animation-delay: 2s; }
+.pa-rings circle:nth-child(3) { animation-delay: 4s; }
+@keyframes ring { 0% { transform: scale(1.5); opacity: .5; } 100% { transform: scale(3); opacity: 0; } }
+.pa-demons, .pa-corridor, .pa-pendulum { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pa-demons .slip { animation: slip 7s ease-in-out infinite; }
+.pa-demons .s2 { animation-delay: -2.3s; }
+.pa-demons .s3 { animation-delay: -4.6s; }
+@keyframes slip { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+.pa-hollows { position: absolute; inset: auto 0 0 0; height: 70%; display: flex; justify-content: center; align-items: flex-end; gap: 6px; padding-bottom: 8%; }
+.pa-hollows .art-hollow { width: 18%; max-width: 60px; }
+.pa-dream { position: absolute; top: 4%; left: 50%; width: 46%; transform: translateX(-50%); }
+.pa-dream * { fill: rgba(143, 148, 163, .12); stroke: var(--grey); stroke-width: 1.5; }
+.pa-tri { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+.pa-tri > div { position: relative; overflow: hidden; border-radius: 6px; }
+.pa-tri .pa-bg { background-size: auto 140%; }
+.pa-tri .glow { filter: none; }
+.pa-hero { position: absolute; inset: 0; display: grid; place-items: end center; padding-bottom: 6%; }
+.pa-hero .art-hero { width: 42%; max-width: 150px; height: auto; overflow: visible; }
+.pa-hero.dimlamp { --lamp: .12; }
+.pa-way .pa-hero { --lamp: .55; }
+.pa-road { position: absolute; left: 50%; bottom: 0; width: 80%; height: 30%; transform: translateX(-50%); background: radial-gradient(ellipse 50% 60% at 55% 30%, rgba(227, 169, 58, .32), transparent 70%); }
+.pa-pendulum .arm { transform-origin: 180px 14px; transform: rotate(40deg); }
+.pa-flag { display: none; }
+
+/* ---------- 钟楼复苏读成"安睡"：冷光熄灭时浮上一层月光深蓝（Mary_to_Victoria_V007） ---------- */
+.backdrop .moon { opacity: 0; transition: opacity 3s ease; }
+.backdrop[data-scene="tower"] .moon { opacity: calc(1 - var(--cold, 1)); background: radial-gradient(ellipse 70% 45% at 50% 18%, rgba(110, 135, 190, .30), transparent 70%), linear-gradient(to bottom, rgba(40, 58, 100, .35), rgba(40, 58, 100, .12) 70%, transparent); mix-blend-mode: screen; }
+
+/* ---------- 无底渊：卡片向上刷走，下一张从下面上来（约 200ms） ---------- */
+.feed { position: relative; overflow: hidden; }
+.feedcard.enter { animation: cardin .22s ease-out; }
+.feedcard.ghost { position: absolute; inset: 0; margin: auto; height: fit-content; pointer-events: none; animation: cardout .22s ease-in forwards; }
+@keyframes cardin { from { transform: translateY(40%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes cardout { from { transform: none; opacity: 1; } to { transform: translateY(-60%); opacity: 0; } }
+
 /* ---------- 出口：瞬间静止 ---------- */
 body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none !important; transition: none !important; }
 
@@ -101,4 +152,10 @@ body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none 
   .art-hero .body, .art-hero .lantern, .art-zero .tail, .art-hollow .glare, .art-clock.ticked .halo { animation: none; }
   .art-clock .hand { transition: none; }
   .chest.art.shattered svg { animation: none; opacity: .7; }
+  .feedcard.enter { animation: fadein .25s ease-out; }
+  .pa-rings circle, .pa-demons .slip { animation: none; }
+  .pa-rings circle:first-child { opacity: .3; transform: scale(1.8); }
+  .feedcard.ghost { animation: fadeout .25s ease-in forwards; }
 }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeout { from { opacity: 1; } to { opacity: 0; } }

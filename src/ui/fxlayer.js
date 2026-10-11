@@ -1,13 +1,14 @@
 // 表现层（Victoria）：监听 Game.fx 的事件，给引擎画好的屏幕加画面与动画。不改游戏逻辑，不产生玩家可见文字。
 // 城市画面：背景（灰 → 琥珀，亮度随大钟格数）、SVG 大钟、主角与灯笼。
 // 宝箱魔的局里（集市）：背景换成集市，压暗以保证对白可读；暖度 = 集市状态（0 死去 / 1 半复苏 / 2 复苏）。
+// 夜枭的局里（钟楼区）：反过来。死去 = 满窗冷白光（整夜不睡）；复苏 = 冷光熄灭，只留钟面一盏琥珀。
 // 出口（exit.tap）立即停掉所有动画；prefers-reduced-motion 的处理在 style.anim.css。
 (function () {
   const G = window.Game;
   const app = document.getElementById("app");
   let shownPct = null;  // 上次画在城市上的格数，用来让"快一格"在回城时看得见
   let backdrop = null;
-  let marketRevived = false;  // district.revive 当场触发时，不等存档就让集市亮起来
+  const revivedNow = {};  // district.revive 当场触发时，不等存档就让城区复苏
 
   function clockPct() {
     try {
@@ -23,7 +24,7 @@
     backdrop = document.createElement("div");
     backdrop.className = "backdrop";
     backdrop.setAttribute("aria-hidden", "true");
-    backdrop.innerHTML = `<div class="layer dead"></div><div class="layer alive"></div>`;
+    backdrop.innerHTML = `<div class="layer dead"></div><div class="layer moon"></div><div class="layer cold"></div><div class="layer alive"></div>`;
     document.body.insertBefore(backdrop, document.body.firstChild);
     return backdrop;
   }
@@ -39,15 +40,21 @@
     b.classList.toggle("dim", !!dim);
   }
 
-  // 集市状态：看穿（第 2 局）之后半复苏，面包师被救（第 3 局）之后复苏。
-  function marketState() {
-    if (marketRevived) return 2;
+  // 城区状态：第 2 局（看穿）之后半复苏，第 3 局（救回被俘者）之后复苏。
+  const DISTRICT_OF = { chest: "market", owl: "tower" };
+  function districtState(level) {
+    if (revivedNow[DISTRICT_OF[level]]) return 2;
     try {
       const done = G.state.get().calendar.completedSessions;
-      return done.includes("chest3") ? 2 : done.includes("chest2") ? 1 : 0;
+      return done.includes(level + "3") ? 2 : done.includes(level + "2") ? 1 : 0;
     } catch (e) {
       return 0;
     }
+  }
+
+  // 钟楼区：冷白窗光随复苏熄灭
+  function setCold(v) {
+    ensureBackdrop().style.setProperty("--cold", v.toFixed(3));
   }
 
   function levelInProgress() {
@@ -91,17 +98,31 @@
     app.querySelectorAll(".chest").forEach((c) => c.classList.add("art"));
   }
 
+  // 开场故事：每页的画面位按 data-art 填进去。图片只在翻到那一页时才加载（背景图写在元素上）。
+  function decoratePrologue() {
+    const el = app.querySelector(".prologue-art");
+    if (!el || el.dataset.filled) return;
+    el.dataset.filled = "1";
+    el.classList.add("pa", "pa-" + el.dataset.art);
+    el.innerHTML = G.art.prologue(el.dataset.art);
+  }
+
   function decorate() {
+    if (G.router.current === "prologue") decoratePrologue();
     const onCity = G.router.current === "city";
-    const inMarket = !onCity && levelInProgress() === "chest" && !document.body.classList.contains("xray");
+    const level = onCity || document.body.classList.contains("xray") ? null : levelInProgress();
+    const district = DISTRICT_OF[level];
     document.body.classList.toggle("scene-city", onCity);
-    document.body.classList.toggle("scene-on", onCity || inMarket);
+    document.body.classList.toggle("scene-on", onCity || !!district);
     if (onCity) {
       setScene("city", false);
+      setCold(0);
       decorateCity();
-    } else if (inMarket) {
-      setScene("market", true);
-      setWarmth(marketState() * 50);
+    } else if (district) {
+      const st = districtState(level);
+      setScene(district, true);
+      setWarmth(st * 50);
+      setCold(district === "tower" ? 1 - st / 2 : 0);
     }
     decorateChest();
   }
@@ -118,13 +139,30 @@
   on("chest.reveal", () => app.querySelectorAll(".chest").forEach((c) => c.classList.add("revealed")));
   on("chest.shatter", () => app.querySelectorAll(".chest").forEach((c) => c.classList.add("revealed", "shattered")));
 
-  // 集市复苏：琥珀光 1.2 秒铺开（钟楼复苏另做：冷白窗光一盏盏熄灭，Mark_to_Victoria_V005）。
+  // 城区复苏：集市是琥珀光铺开；钟楼是冷白窗光慢慢熄灭，钟面亮起琥珀（Mark_to_Victoria_V005）。
   on("district.revive", (d) => {
-    if (d.district !== "market") return;
-    marketRevived = true;
-    setScene("market", true);
+    if (!d.district) return;
+    revivedNow[d.district] = true;
+    setScene(d.district, true);
     document.body.classList.add("scene-on");
     setWarmth(100);
+    setCold(0);
+  });
+
+  // 无底渊：卡片"刷"走。引擎换卡后才发事件，所以每次留一份副本，下一张来时让副本向上滑走（Mary_to_Victoria_V006 二）。
+  let lastCard = null;
+  on("abyss.card", () => {
+    const feed = app.querySelector(".feed");
+    const card = feed && feed.querySelector(".feedcard");
+    if (!card) return;
+    if (lastCard && lastCard.isConnected === false) {
+      lastCard.classList.add("ghost");
+      feed.appendChild(lastCard);
+      lastCard.addEventListener("animationend", (e) => e.target.remove(), { once: true });
+    }
+    card.classList.add("enter");
+    lastCard = card.cloneNode(true);
+    lastCard.classList.remove("enter");
   });
 
   // 夜枭：过了关灯时间，时钟从中性变成屏幕的冷白。

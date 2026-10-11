@@ -23,7 +23,7 @@
       "calendar.icon", "lock.notYet", "lock.catchUpOnePerDay",
       "city.enter", "city.doneForToday", "dev.title", "a11y.holdAlternative", "settings.sound", "settings.soundNote",
     ],
-    fns: ["calendar.nextSession"],
+    fns: ["calendar.nextSession", "test.fastday"],
   };
 
   // M1：宝箱魔第 1 局
@@ -47,7 +47,8 @@
       "gameDemon.setStayMinutes", "gameDemon.stayTimeUp", "gameDemon.closedIsLeave", "gameDemon.distractBtn", "gameDemon.recognized",
       "gameDemon.lateNight", "gameDemon.lateNightOnce", "gameDemon.leaveMeansSleep",
       "codex.title", "codex.empty",
-      "playtest.export", "playtest.sendHint", "playtest.copied",
+      "playtest.export", "playtest.sendHint", "playtest.copied", "playtest.manualCopy",
+      "prologue.pages", "prologue.next", "prologue.enter", "prologue.skip", "settings.prologue",
     ],
     fns: [
       "zero.guessCue", "zero.guessBasis", "zero.returnLine",
@@ -159,11 +160,26 @@
     fns: ["abyss.card", "abyss.reveal", "abyss.guessTimeLine", "abyss.guessCardsLine"],
   };
 
+  // M9：无底渊第 2 局（任务报告、看穿、撞墙一课、画门、现实里的门、图鉴"门"）
+  const m9 = {
+    ids: [
+      "abyss2.task.eyebrow", "abyss2.task.q", "abyss2.task.options", "abyss2.task.skip", "abyss2.task.reply.number", "abyss2.task.reply.notTried", "abyss2.task.reply.skip",
+      "abyss2.xray.eyebrow", "abyss2.xray.rewind", "abyss2.xray.find", "abyss2.xray.more", "abyss2.xray.gapLines", "abyss2.xray.found",
+      "abyss2.xray.zero1", "abyss2.xray.zero2", "abyss2.xray.abyss", "abyss2.xray.zero3",
+      "abyss2.inside.eyebrow", "abyss2.inside.go", "abyss2.inside.nowDraw", "abyss2.drawBtn", "abyss2.inside.refused", "abyss2.inside.zero",
+      "abyss2.wall.eyebrow", "abyss2.wall.say", "abyss2.wall.hint", "abyss2.type.q", "abyss2.types",
+      "abyss2.corridor.eyebrow", "abyss2.door", "abyss2.feelTap", "abyss2.doorTempt", "abyss2.doorOut", "abyss2.yours",
+      "abyss2.realQ", "abyss2.realOptions", "abyss2.realDone",
+      "codex.doors.title", "codex.doors.seen", "codex.doors.practiced", "codex.doors.real", "codex.doors.realNote",
+    ],
+    fns: ["abyss2.boast", "abyss2.realQIntro", "abyss2.doorResult", "abyss2.doorLabel"],
+  };
+
   G.contract = {
     enums,
-    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8 },
+    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9 },
     // 每种语言当前要求齐全的里程碑
-    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7"] },
+    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7"] },
     idsFor(lang) {
       return (this.requiredByLang[lang] || []).flatMap((m) => this.milestones[m].ids);
     },

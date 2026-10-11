@@ -44,6 +44,8 @@
   // 上次在最后一战期间关掉页面 = 离开：补记一格，在场角色说一句。
   function enterCity() {
     const s = G.state.get();
+    // 开场故事：第一次进城前播一次（零的通知紧接在后面）
+    if (!s.startedAt && G.prologue && !G.prologue.seen()) return G.prologue.play().then(enterCity);
     if (!s.startedAt) {
       G.state.update((x) => (x.startedAt = Date.now()));
       const first = G.schedule.list[0];
@@ -88,6 +90,8 @@
     let entry = "";
     let note = "";
     if (opts.done) note = `<p class="hint">${fmt(G.t("city.doneForToday"))}</p>`;
+    // 快进测试模式：城市画面上写明，免得测试的人以为是正式版
+    if (G.config.fastDayMinutes) note = `<p class="hint fastnote">${fmt(G.f("test.fastday", { minutes: G.config.fastDayMinutes, day }))}</p>` + note;
     if (opts.closedNote) note = `<p class="hint">${fmt(G.t("gameDemon.closedIsLeave"))}</p>`;
     let patrolBtn = "";
     if (next) {
@@ -159,6 +163,7 @@
           <div class="row">
             ${G.i18n.LANGS.map((l) => `<button type="button" class="btn-choice" data-lang="${l}" aria-pressed="${l === G.i18n.lang}">${esc(G.i18n.packs[l].common.text["lang." + l])}</button>`).join("")}
           </div>
+          ${G.prologue ? btn("replayPrologue", G.t("settings.prologue"), "btn-quiet") : ""}
         </section>
         <section class="stack">
           <label class="pick" for="altHold"><input type="checkbox" id="altHold" ${G.state.get().flags.holdAlternative ? "checked" : ""}><span>${fmt(G.t("a11y.holdAlternative"))}</span></label>
@@ -188,6 +193,8 @@
         settings();
       })
     );
+    const rp = G.router.$("#replayPrologue");
+    if (rp) rp.addEventListener("click", () => G.prologue.play({ replay: true }).then(settings));
     G.router.$("#sound").addEventListener("change", (e) => {
       G.state.update((s) => (s.flags.sound = !!e.target.checked));
       G.fx.play(e.target.checked ? "sound.on" : "sound.off", {});
@@ -234,6 +241,7 @@
           G.events.log("playtest.export", { option: "copy" });
         } catch (e) {
           showBox();
+          msg.textContent = G.text("playtest.manualCopy");
           G.events.log("playtest.export", { option: "box" });
         }
       });

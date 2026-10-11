@@ -35,6 +35,7 @@ Game.content.register("en", "common", {
     "playtest.export": "Export playtest data",
     "playtest.sendHint": "Tap to send it to the person who invited you. It only has what you tapped, nothing you wrote.",
     "playtest.copied": "Copied. Paste it to the person who invited you.",
+    "playtest.manualCopy": "Press and hold the text below, select all, copy it, then send it to the person who invited you.",
     // Titles (in-game events only) and the "auto-stop" status (shown separately)
     "title.earned": "You are now",
     "title.stolen": "Pickpocketed",
@@ -47,6 +48,10 @@ Game.content.register("en", "common", {
     "status.autoStop": "auto-stop",
   },
   fn: {
+    // Only in the ?fastday= test mode
+    "test.fastday"({ minutes, day }) {
+      return `Test mode: ${minutes} min = 1 day. It's day ${day}.`;
+    },
     "calendar.nextSession"({ day, today }) {
       if (!day) return "Nothing more is scheduled.";
       if (today != null && day <= today) return "The next part is open today.";
