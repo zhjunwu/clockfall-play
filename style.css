@@ -444,3 +444,17 @@ button.loopnode { cursor: pointer; }
 .ringhits { position: absolute; inset: 0; }
 .ringhit { width: 64px; height: 64px; background: transparent; border: 1px dashed transparent; border-radius: 50%; padding: 0; }
 .ringhit:focus-visible { border-color: var(--xray); }
+
+/* 零线第 28 天：零的小红点（静止、很淡、不闪）与零的地图 */
+.zerodot { display: flex; justify-content: center; padding: 12px 0; }
+.zerodot i { width: 10px; height: 10px; border-radius: 50%; background: var(--demon-red, #c0392b); opacity: .55; position: relative; }
+.zerodot i::after { content: ""; position: absolute; right: -6px; bottom: -6px; width: 7px; height: 7px; border-right: 2px solid var(--demon-red, #c0392b); border-bottom: 2px solid var(--demon-red, #c0392b); border-radius: 0 0 7px 0; opacity: .8; }
+.zeromap { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--panel); display: flex; flex-direction: column; gap: 4px; }
+.zeromap .zcell { display: flex; gap: 10px; font-size: .9rem; }
+.zeromap .zcell b { color: var(--muted); font-weight: 400; min-width: 4.5em; }
+.zeromap .znote { font-family: var(--font-display); margin-top: 6px; }
+
+/* 零线第 31 天：反驳 */
+.rebuttal { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.9; }
+.rebuttal .word { font: inherit; color: var(--gold); background: none; border: 0; border-bottom: 1px dashed var(--gold); padding: 0 2px; cursor: pointer; }
+.rebuttal.said { border-left: 3px solid var(--gold); padding-left: 10px; }

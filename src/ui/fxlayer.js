@@ -8,8 +8,20 @@
   const app = document.getElementById("app");
   let shownPct = null;  // 上次画在城市上的格数，用来让"快一格"在回城时看得见
   let backdrop = null;
-  const revivedNow = {};
-  let zeroRelapsed = false;  // zero.relapse 到 zero.return 之间（零线第二阶段才会触发）  // district.revive 当场触发时，不等存档就让城区复苏
+  const revivedNow = {};  // district.revive 当场触发时，不等存档就让城区复苏
+  let zeroEvent = null;    // zero.relapse / zero.return 当场触发时，不等存档
+
+  // 零的状态：第 25 天"圈"之后失踪（复发），零线最后一局（zero5，第 36 天）救回。design 4.4。
+  // 存档推算，重新打开也对；当场的事件优先。
+  function zeroAway() {
+    if (zeroEvent) return zeroEvent === "relapse";
+    try {
+      const done = G.state.get().calendar.completedSessions;
+      return done.includes("loop") && !done.includes("zero5");
+    } catch (e) {
+      return false;
+    }
+  }
 
   function clockPct() {
     try {
@@ -113,8 +125,11 @@
     const t = app.querySelector(".talk");
     if (!t || t.querySelector(".talk-who")) return;
     let html = "";
-    if (t.classList.contains("zero")) html = zeroRelapsed ? G.art.zero.replace('class="art-zero"', 'class="art-zero relapse"') : G.art.zero;
+    const away = zeroAway();
+    if (t.classList.contains("zero")) html = away ? G.art.zero.replace('class="art-zero"', 'class="art-zero relapse"') : G.art.zero;
     else for (const k in G.art.portraits) if (t.classList.contains(k)) html = G.art.portraits[k];
+    // 零失踪期间，同伴说话时上方是零的空位：一个虚线轮廓（design 4.4"零的位置空着"）
+    if (!html && away && /\b(baker|watchman|messenger)\b/.test(t.className)) html = G.art.zero.replace('class="art-zero"', 'class="art-zero absent"');
     if (!html) return;
     const who = document.createElement("div");
     who.className = "talk-who";
@@ -140,6 +155,15 @@
     if (w) { w.classList.add("art"); w.innerHTML = G.art.walker; }
   }
 
+  function decorateJar() {
+    if (!jarOn || app.querySelector(".jar-corner")) return;
+    const j = document.createElement("div");
+    j.className = "jar-corner";
+    j.setAttribute("aria-hidden", "true");
+    j.innerHTML = G.art.portraits.jar;
+    app.insertBefore(j, app.firstChild);
+  }
+
   // 场景背景：城市、城区、零发呆
   function decorateScene() {
     const onCity = G.router.current === "city";
@@ -151,7 +175,7 @@
     document.body.classList.toggle("scene-on", onCity || !!district || staring);
     if (staring) {
       setScene("tower", true);
-      setWarmth(100);
+      setWarmth(55);  // 钟面光晕压一半，不和发呆那两句字抢（Mary_V060 A1）
       setCold(0);
     } else if (onCity) {
       setScene("city", false);
@@ -167,7 +191,7 @@
 
   // 每一步各自独立：一步出错（比如引擎改了某个类名）只丢那一处画面，不拖垮其他步，也不影响游戏本身。
   // 错误照样打到控制台，tools/art/smoke.sh 会把它当失败。
-  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest];
+  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest, decorateJar];
   function decorate() {
     STEPS.forEach((step) => {
       try {
@@ -201,8 +225,22 @@
   });
 
   // 零复发：胸口那一点慢慢变成魔鬼红并停住，不闪、不脉冲、不配音效（Mary_to_Victoria_V006 一）。
-  on("zero.relapse", () => { zeroRelapsed = true; app.querySelectorAll(".art-zero").forEach((z) => z.classList.add("relapse")); });
-  on("zero.return", () => { zeroRelapsed = false; app.querySelectorAll(".art-zero").forEach((z) => z.classList.remove("relapse")); });
+  on("zero.relapse", () => { zeroEvent = "relapse"; app.querySelectorAll(".art-zero:not(.absent)").forEach((z) => z.classList.add("relapse")); });
+  on("zero.return", () => { zeroEvent = "return"; app.querySelectorAll(".art-zero").forEach((z) => z.classList.remove("relapse")); });
+
+  // 破罐魔：出场后每一屏的右上角都蹲着它（design 4.3"总在画面角落"），不动。
+  // 它占自己的一小行，不叠在文字或按钮上（Mary 的出口规则）；退场就消失。
+  let jarOn = false;
+  on("demon.appear", (d) => {
+    if (d.who !== "jar") return;
+    jarOn = true;
+    decorateJar();
+  });
+  on("demon.leave", (d) => {
+    if (d.who !== "jar") return;
+    jarOn = false;
+    app.querySelectorAll(".jar-corner").forEach((j) => j.remove());
+  });
 
   // 无底渊：卡片"刷"走。引擎换卡后才发事件，所以每次留一份副本，下一张来时让副本向上滑走（Mary_to_Victoria_V006 二）。
   let lastCard = null;

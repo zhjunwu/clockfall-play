@@ -73,6 +73,14 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .art-zero.relapse .dot { fill: var(--demon-red); filter: drop-shadow(0 0 4px var(--demon-red)); }
 @keyframes tailsway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
 
+/* 零失踪期间的空位：只剩虚线轮廓，没有填充、没有红点 */
+.art-zero.absent path, .art-zero.absent circle { fill: none; stroke: var(--grey); stroke-dasharray: 3 3; stroke-opacity: .8; }
+.art-zero.absent .dot { display: none; }
+.art-zero.absent .tail { animation: none; }
+/* 破罐魔：每一屏的第一行、靠右，自己占一小行，不叠在任何东西上，不动 */
+.jar-corner { align-self: flex-end; width: 34px; height: 34px; margin-bottom: -12px; pointer-events: none; opacity: .85; animation: fadein 1.2s ease-out; }
+.jar-corner svg { width: 100%; height: 100%; }
+
 /* 对白屏里的零：小、靠左、在第一句话上方 */
 .talk-who { width: 56px; height: 62px; margin-bottom: -6px; }
 .talk-who .art-zero { width: 100%; height: 100%; overflow: visible; }
@@ -92,6 +100,10 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .messengerlane .walker.art svg { width: 100%; height: 100%; display: block; }
 .messengerlane .walker.art.stopped { background: none; color: var(--gold); filter: drop-shadow(0 0 6px rgba(227, 169, 58, .5)); }
 
+/* 零发呆的两句字：背景是安睡的钟楼，钟面有琥珀光晕；字下面垫一块深色底，保证读得清（Mary_V060 A1） */
+.stare p { background: rgba(11, 13, 18, .78); padding: 6px 12px; border-radius: 8px; color: var(--ink); }
+.stare p.hint { color: #b9bdc8; }
+
 /* 第 25 天的发呆（"圈"之局）：零离小红点更近（Mary V055）。请 Mark 在那一屏的 .stare 上加 .near */
 .stare.near .stareart .zeroshape { left: 64px; }
 
@@ -104,7 +116,7 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .ring .upright > svg, .ring .upright > .chest { width: 100%; aspect-ratio: 1; display: block; }
 .ring .upright > .chest { pointer-events: none; }
 .ring .pin { position: absolute; top: 9%; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #8f94a3; box-shadow: 0 1px 2px #000; z-index: 1; }
-.ring .nlabel { margin-top: 2px; font-size: .72rem; line-height: 1.3; color: var(--muted); text-align: center; white-space: nowrap; }
+.ring .nlabel { margin-top: 2px; width: 6.5em; font-size: .72rem; line-height: 1.3; color: var(--muted); text-align: center; overflow-wrap: anywhere; }
 .ring .node.on .upright { filter: drop-shadow(0 0 8px rgba(98, 214, 198, .7)); }
 .ring .node-zero .upright > svg { width: 80%; }
 .ring.spin .rot { animation: ringspin 48s linear infinite; }

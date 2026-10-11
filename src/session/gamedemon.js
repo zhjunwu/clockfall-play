@@ -141,11 +141,14 @@
 
     const name = await stepName({ first: input.first, endHook: input.endHook });
     G.events.log("endfight.name", { hook: input.endHook, answer: name.answer, correct: name.correct });
+    // 某一局认对后的一句旁白（schedule 的 nameRightLine，例如第 26 天"你已经会了。"）；认错什么都不说
+    if (name.correct && input.session && input.session.nameRightLine) await G.screens.talk({ speaker: "narrator", lines: G.t(input.session.nameRightLine) });
     // 第一次自己认对钩子：一句小反馈（认出游戏自己的钩子值得被看见），然后如果还没有更高的称号，升看破者
     if (!input.first && name.correct) {
       if (!G.state.get().flags.firstRecognized) {
         G.state.update((s) => (s.flags.firstRecognized = true));
-        await G.screens.talk({ speaker: "zero", lines: G.t("gameDemon.recognized") });
+        const who = G.patrolday ? G.patrolday.whoIsPresent(G.clock.today()) : "zero";
+        await G.screens.talk({ speaker: who || "narrator", lines: G.t("gameDemon.recognized") });
       }
       if (G.titles) await G.titles.awardAndShow("seer");
     }

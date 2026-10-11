@@ -2,6 +2,31 @@
 (function () {
   const G = window.Game;
 
+  // 触屏"幽灵点击"（Mary_V063 A1）：按住完成后屏幕立刻换了，手指还按着；抬起时浏览器会在同一位置合成一次点击，
+  // 落到新屏幕的按钮上替玩家作答。办法：按住完成时"吞掉"这根手指抬起前后的点击——直到抬起，再加 400 ms。
+  let swallowUntilUp = false, swallowUntil = 0;
+  function armSwallow() {
+    swallowUntilUp = true;
+  }
+  const lift = () => {
+    if (!swallowUntilUp) return;
+    swallowUntilUp = false;
+    swallowUntil = performance.now() + 400;
+  };
+  document.addEventListener("pointerup", lift, true);
+  document.addEventListener("pointercancel", lift, true);
+  document.addEventListener("touchend", lift, true);
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (swallowUntilUp || performance.now() < swallowUntil) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    },
+    true
+  );
+
   function useAlt() {
     try {
       return !!G.state.get().flags.holdAlternative;
@@ -30,6 +55,7 @@
         if (now - lastTap < G.config.doubleTapWindowMs) {
           done = true;
           if (onProgress) onProgress(1);
+          armSwallow();
           onHold({ alt: true, heldMs: 0 });
         }
         lastTap = now;
@@ -42,6 +68,7 @@
         done = true;
         start = 0;
         G.fx.play("hold.done", {});
+        armSwallow();
         onHold({ alt: false, heldMs: ms });
       }, ms);
     }
@@ -88,6 +115,7 @@
         if (finished) return;
         finished = true;
         cleanup();
+        armSwallow();
         G.fx.play("hold.done", { surf: true });
         resolve({ released, totalMs: need, alt });
       }
@@ -121,5 +149,5 @@
     });
   }
 
-  G.hold = { attach, surf, useAlt };
+  G.hold = { attach, surf, useAlt, _swallowing: () => swallowUntilUp || performance.now() < swallowUntil };
 })();

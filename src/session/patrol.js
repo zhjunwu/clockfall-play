@@ -2,13 +2,18 @@
 // 主线局（第 2 局起）与巡逻日共用。
 (function () {
   const G = window.Game;
+  // 说话的是此刻在场的角色：零 / 同伴 / 无人（旁白）。第 26～35 天零不在（design.md 4.4）
+  function presentSpeaker() {
+    const who = G.patrolday ? G.patrolday.whoIsPresent(G.clock.today()) : "zero";
+    return who || "narrator";
+  }
   const { esc, fmt, paras, btn } = G.dom;
 
   function ask() {
     return new Promise((resolve) => {
       const opts = G.t("patrol.options");
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${presentSpeaker()}">
           <p class="eyebrow">${fmt(G.t("patrol.eyebrow"))}</p>
           ${paras(G.t("patrol.question"))}
           <div class="stack" id="opts">
@@ -25,7 +30,7 @@
     if (!cues.length) return Promise.resolve(null);
     return new Promise((resolve) => {
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${presentSpeaker()}">
           <p>${fmt(G.t("patrol.whichCue"))}</p>
           <div class="chips" id="cues">
             ${cues.map((c) => `<button type="button" class="chip" data-id="${esc(c.id)}">${esc(G.f("patrol.cueLabel", c))}</button>`).join("")}
@@ -40,7 +45,7 @@
   function stoppedQ() {
     return new Promise((resolve) => {
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${presentSpeaker()}">
           <p>${fmt(G.t("patrol.stoppedQ"))}</p>
           <div class="row">
             ${btn("yes", G.t("patrol.stoppedYes"), "btn-choice")}
@@ -58,7 +63,7 @@
       const lines = [G.t("patrol.reply." + kind)];
       if (kind !== "notAppear" && stopped != null) lines.push(G.t(stopped ? "patrol.stoppedReplyYes" : "patrol.stoppedReplyNo"));
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${presentSpeaker()}">
           ${paras(lines)}
         </div>
         ${canMore ? btn("more", G.t("patrol.reportAnother"), "btn-quiet") : ""}
@@ -77,7 +82,7 @@
     const opts = (Array.isArray(raw) ? raw : []).map((o) => (typeof o === "string" ? { label: o, phrase: o } : o));
     return new Promise((resolve) => {
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${presentSpeaker()}">
           <p>${fmt(G.t("patrol." + field))}</p>
           <div class="chips" id="chips">
             ${opts.map((o, i) => `<button type="button" class="chip" data-i="${i}">${esc(o.label)}</button>`).join("")}
@@ -131,7 +136,7 @@
     const how = G.t("patrol.howToFind");
     return new Promise((resolve) => {
       G.router.show(`
-        <div class="stack talk zero">
+        <div class="stack talk ${presentSpeaker()}">
           ${paras(G.t("patrol.weeklyScreenTime"))}
           <ul class="hint howto">${(Array.isArray(how) ? how : [how]).map((h) => `<li>${fmt(h)}</li>`).join("")}</ul>
           <div class="row">

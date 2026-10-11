@@ -120,6 +120,7 @@
           if (!held) return;
           if (b.dataset.id !== demon) {
             misses++;
+            G.fx.play("loop.misread", { demon: b.dataset.id });
             $("#hint").textContent = G.text("loop.practice.again"); // 不加速、不扣什么，只是再来
             return;
           }

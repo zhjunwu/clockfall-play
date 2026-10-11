@@ -17,9 +17,9 @@
     { id: "abyss2", level: "abyss", key: "session2", earliestDay: 19, endHook: "collection", playable: true, patrolDetail: false },
     { id: "abyss3", level: "abyss", key: "session3", earliestDay: 22, endHook: "cliffhanger", quietFlag: true, playable: true, patrolDetail: false },
     { id: "loop", level: "loop", key: "session1", earliestDay: 25, endHook: "cliffhanger", quietFlag: true, playable: true },
-    { id: "zero1", level: "zero", key: "session1", earliestDay: 26, endHook: "tbd" },
-    { id: "zero2", level: "zero", key: "session2", earliestDay: 28, endHook: "tbd" },
-    { id: "zero3", level: "zero", key: "session3", earliestDay: 31, endHook: "tbd" },
+    { id: "zero1", level: "zero", key: "session1", earliestDay: 26, endHook: "none", playable: true, nameRightLine: "zero1.youKnowIt" },
+    { id: "zero2", level: "zero", key: "session2", earliestDay: 28, endHook: "cliffhanger", flagId: "flag.cliffhangerZero", playable: true },
+    { id: "zero3", level: "zero", key: "session3", earliestDay: 31, endHook: "none", playable: true },
     { id: "zero4", level: "zero", key: "session4", earliestDay: 34, endHook: "tbd" },
     { id: "zero5", level: "zero", key: "session5", earliestDay: 36, endHook: "none" },
   ];

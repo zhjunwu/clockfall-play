@@ -34,8 +34,8 @@ Game.content.register("zh", "patrolday", {
       const baker = [
         "零不在。它的位置空着。我替它看着集市。",
         "还没见到零。炉子我一直开着。",
-        "钟楼那边昨晚有光。不知道是不是它。",
-        "你来了。零还没回来。",
+        "钟楼那边昨晚有光。",
+        "零还没回来。",
       ];
       if (who === "baker") return baker;
       return "零不在。";

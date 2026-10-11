@@ -137,7 +137,7 @@
   const reddot = `<svg class="art-demon art-dot" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="11" fill="var(--demon-red)"/><path d="M47 29 L51 29 L51 33 Z" fill="#0b0d12"/></svg>`;
   function ring(opts) {
     opts = opts || {};
-    const nodes = opts.nodes || [], n = nodes.length || 1, R = 38;
+    const nodes = opts.nodes || [], n = nodes.length || 1, R = 34;  // 34：左右两端的节点和换行后的标签不贴屏幕边（Mary_V060 C1）
     const pos = (i) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; return [50 + R * Math.cos(a), 50 + R * Math.sin(a)]; };
     let arrows = "";
     for (let i = 0; i < n; i++) {

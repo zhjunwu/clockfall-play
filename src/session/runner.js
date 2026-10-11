@@ -17,11 +17,14 @@
       const st0 = G.state.get();
       const before = st0.ledger.clockTicks;
       const prevTicks = st0.sessions.lastSeenTicks || 0;
-      await G.screens.talk({
-        speaker: "zero",
-        eyebrow: G.t("city.return.eyebrow"),
-        lines: G.f("zero.returnLine", { session: idx, clockDelta: before - prevTicks }),
-      });
+      // 零不在的日子（第 26～35 天）由同伴回城，没有同伴时是旁白
+      const who = G.patrolday ? G.patrolday.whoIsPresent(G.clock.today()) : "zero";
+      if (who === "zero") {
+        await G.screens.talk({ speaker: "zero", eyebrow: G.t("city.return.eyebrow"), lines: G.f("zero.returnLine", { session: idx, clockDelta: before - prevTicks }) });
+      } else {
+        const ls = G.f("companion.returnLine", { who });
+        await G.screens.talk({ speaker: who || "narrator", eyebrow: G.t("city.return.eyebrow"), lines: Array.isArray(ls) ? ls[Math.floor(Math.random() * ls.length)] : ls });
+      }
       // 周屏幕时间要问的那一局不再追问"几点、在做什么"，免得一局里问太多
       // 本局自己追问细节的（patrolDetail: false）也不问
       await G.patrol.report({ detail: idx >= 3 && session.patrolDetail !== false && !G.patrol.weeklyDue() });

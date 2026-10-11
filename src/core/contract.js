@@ -201,11 +201,22 @@
     fns: ["loop.cueLabel", "loop.cracks", "loop.cutHow"],
   };
 
+  // M12：零复发线第 1 局（第 26 天）
+  const m12 = {
+    ids: ["zero1.absent", "zero1.notToday", "zero1.market", "zero1.youKnowIt",
+      "zero2.dot", "zero2.recognizeQ", "zero2.options", "zero2.right", "zero2.lookAgain", "zero2.foundMap", "zero2.mapTitle", "zero2.mapCells", "zero2.mapNote",
+      "zero2.howItHappened", "zero2.earliestQ", "zero2.earliestDone", "zero2.tower", "flag.cliffhangerZero",
+      "zero3.eyebrow", "zero3.found", "zero3.zeroAway", "zero3.jarEnter", "zero3.zeroTrail", "zero3.pickQ", "zero3.candidates", "zero3.editHint", "zero3.typeToggle",
+      "zero3.typePlaceholder", "zero3.useIt", "zero3.sayIt", "zero3.editAgain", "zero3.cracked", "zero3.jarAgain", "zero3.vowWords", "zero3.jarVow", "zero3.zeroVow",
+      "zero3.jarLeave", "zero3.zeroAsk"],
+    fns: ["zero1.companionNews"],
+  };
+
   G.contract = {
     enums,
-    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11 },
+    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12 },
     // 每种语言当前要求齐全的里程碑
-    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10"] },
+    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11", "m12"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11"] },
     idsFor(lang) {
       return (this.requiredByLang[lang] || []).flatMap((m) => this.milestones[m].ids);
     },
