@@ -59,10 +59,9 @@
   on("clock.tick", () => play("clock_tick"));
   on("prologue.page", (d) => { if (d.i > 0) play("page_turn"); });  // 第 1 页是打开时出现的，不响
   on("owl.phoneDown", () => play("phone_down"));
-  on("abyss.card", () => play("card_swipe"));
   on("district.revive", () => play("revive"));
   on("abyss.doorOpen", () => play("door_open"));
-  // 墙拒绝画门（abyss.doorRefused）刻意不出声：那一下是"空"。
+  // 刻意不出声：墙拒绝画门（abyss.doorRefused），那一下是"空"；长廊划卡（abyss.card），划动不该变得更顺手（Mary_to_Victoria_V010）。
 
   // 出口：离开这一局、去睡觉。立刻停，之后这次打开里不再出任何声音（出口那一下本身也不响）。
   on("exit.tap", () => {

@@ -145,7 +145,7 @@
       }
       // 第一集前先给"睡觉 / 再看一集"的机会（0 集就睡也可以）
       $("#choices").hidden = false;
-      $("#sleep").addEventListener("click", () => finish(true));
+      $("#sleep").addEventListener("click", () => (G.fx.play("owl.sleep", { night: 1 }), finish(true)));
       $("#oneMore").addEventListener("click", () => {
         clearInterval(tick);
         manual++;
@@ -171,7 +171,7 @@
       `, { name: "owl-night2" });
       // 放大的是字号和内边距（布局内），不是 transform；"睡觉"按钮尺寸不变、完整可见、可点
       G.router.$("#oneMore2").style.setProperty("--grow", String(bigButton));
-      G.router.$("#sleep2").addEventListener("click", () => resolve("sleep"));
+      G.router.$("#sleep2").addEventListener("click", () => (G.fx.play("owl.sleep", { night: 2 }), resolve("sleep")));
       G.router.$("#oneMore2").addEventListener("click", () => resolve("oneMore"));
     });
   }

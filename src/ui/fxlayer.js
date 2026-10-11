@@ -213,6 +213,9 @@
   on("abyss.doorLit", () => app.querySelectorAll(".wall").forEach((w) => w.classList.add("lit")));
   on("abyss.doorOpen", () => app.querySelectorAll(".wall").forEach((w) => w.classList.add("open")));
 
+  // 夜枭："睡觉"是故事里的选择，不是出口。只让屏幕暗下来，不配声音（Mary_to_Victoria_V010）。
+  on("owl.sleep", () => app.querySelectorAll(".tv").forEach((t) => t.classList.add("off")));
+
   // 夜枭：过了关灯时间，时钟从中性变成屏幕的冷白。
   on("owl.lightsOut", () => app.querySelectorAll(".tvclock").forEach((c) => c.classList.add("past")));
 

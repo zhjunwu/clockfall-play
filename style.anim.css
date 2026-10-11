@@ -116,6 +116,23 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .tv { box-shadow: 0 0 36px rgba(207, 227, 240, .10), inset 0 0 40px rgba(207, 227, 240, .06); }
 .btn-choice.tempt { border-color: var(--tempt-solid); color: #f4f8fb; box-shadow: 0 0 18px var(--tempt); }
 .choices2 .btn-choice.grow { box-shadow: 0 0 calc(18px + 14px * (var(--grow) - 1)) var(--tempt); }
+.tv .cliff { color: #eef4f8; }
+.tv { animation: screenflicker 9s ease-in-out infinite; }
+@keyframes screenflicker { 0%, 100% { box-shadow: 0 0 36px rgba(207, 227, 240, .10), inset 0 0 40px rgba(207, 227, 240, .06); } 50% { box-shadow: 0 0 44px rgba(207, 227, 240, .16), inset 0 0 48px rgba(207, 227, 240, .09); } }
+
+.tv.off { animation: none; box-shadow: none; opacity: .35; transition: opacity 1.2s ease; }
+
+/* 两天回放：白天格顶边淡琥珀，夜晚格更暗、顶边冷白（被屏幕占去的夜） */
+.twodays .daycell:nth-child(odd) { border-top: 2px solid rgba(227, 169, 58, .45); }
+.twodays .daycell:nth-child(even) { background: #090b10; border-top: 2px solid rgba(207, 227, 240, .5); }
+
+/* 手机：屏幕发冷白光；放进格子后熄灭 */
+.phone { background: radial-gradient(ellipse at 50% 40%, rgba(207, 227, 240, .22), var(--panel) 75%); border-color: rgba(207, 227, 240, .45); box-shadow: 0 0 16px var(--tempt); color: #eef4f8; transition: box-shadow .8s ease, background .8s ease, color .8s ease; }
+.spot.filled .phone { background: #07090d; border-color: var(--line); box-shadow: none; color: var(--grey); }
+.spot.filled { border-color: var(--grey); }
+/* 夜枭第 3 局：放手机的地方是一扇门 */
+.spot.door { border-radius: 48% 48% 10px 10px / 30% 30% 10px 10px; }
+
 /* 关灯时钟不是琥珀（琥珀 = 夺回的时间）。平时中性，过了关灯时间变冷白。 */
 .tvclock { color: var(--muted); transition: color 1.2s ease; }
 .tvclock.past { color: var(--tempt-solid); }
@@ -189,7 +206,7 @@ body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none 
   .art-clock .hand { transition: none; }
   .chest.art.shattered svg { animation: none; opacity: .7; }
   .feedcard.enter { animation: fadein .25s ease-out; }
-  .pa-rings circle, .pa-demons .slip, .art-game .rise { animation: none; }
+  .pa-rings circle, .pa-demons .slip, .art-game .rise, .tv { animation: none; }
   .ghostdoor { animation: fadeout .6s ease-out forwards; }
   .wall.drawn-in .drawn { animation: none; }
   .pa-rings circle:first-child { opacity: .3; transform: scale(1.8); }

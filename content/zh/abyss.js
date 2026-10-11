@@ -40,8 +40,8 @@ Game.content.register("zh", "abyss", {
     "abyss.guessCardsOptions": [
       { v: "lt10", label: "10 张以下", lo: 0, hi: 9 },
       { v: "10", label: "10～20", lo: 10, hi: 20 },
-      { v: "20", label: "20～40", lo: 21, hi: 40 },
-      { v: "40", label: "40～60", lo: 41, hi: 60 },
+      { v: "20", label: "21～40", lo: 21, hi: 40 },
+      { v: "40", label: "41～60", lo: 41, hi: 60 },
       { v: "60", label: "60 张以上", lo: 61, hi: 100000 },
     ],
     "abyss.exitedSelf": "你自己走出来的。没有底，你也走出来了。",
