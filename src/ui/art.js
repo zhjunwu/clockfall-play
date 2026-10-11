@@ -119,7 +119,13 @@
   const jar = `<svg class="art-demon art-jar" viewBox="0 0 80 80" aria-hidden="true">
     <path d="M30 14 h20 v6 q12 6 12 26 q0 26 -22 26 q-22 0 -22 -26 q0 -20 12 -26 z" fill="#1b2130" stroke="#5b6070" stroke-width="1.5"/>
     <path d="M24 44 L32 48 L38 44 L44 50 L50 45 L56 47" fill="none" stroke="#0b0d12" stroke-width="2.5" stroke-linejoin="round"/>
-    <circle cx="33" cy="36" r="1.5" fill="var(--demon-red)"/><circle cx="47" cy="36" r="1.5" fill="var(--demon-red)"/></svg>`;
+    <circle cx="33" cy="36" r="1.5" fill="var(--demon-red)"/><circle cx="47" cy="36" r="1.5" fill="var(--demon-red)"/>
+    <g class="jcracks" fill="none" stroke="#0b0d12" stroke-width="2" stroke-linejoin="round">
+      <path class="jc jc1" d="M41 20 L38 27 L42 31"/><path class="jc jc2" d="M60 38 L54 50 L58 58"/><path class="jc jc3" d="M40 50 L37 60 L41 70"/></g></svg>`;
+
+  // 零的小红点（第 28 天）：很淡、静止、不闪的红色逗号，只有尾巴认得出是零
+  const zeroDot = `<svg class="art-zerodot" viewBox="0 0 40 46" aria-hidden="true">
+    <path d="M26 24 C29 31 26 39 17 43 C21 37 22 32 20 27 Z" fill="var(--demon-red)"/><circle cx="20" cy="18" r="10" fill="var(--demon-red)"/></svg>`;
 
   // 宝箱魔小像：现形后的样子
   const chestFace = `<span class="chest art revealed">${chest}</span>`;
@@ -228,5 +234,5 @@
   // 引擎在同样位置叠点击按钮时请读这个值，别写死（Mark 的 loop/session1.js 现在写死 38）。
   ring.R = 34;
 
-  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker, ring };
+  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker, ring, zeroDot };
 })();

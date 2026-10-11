@@ -91,7 +91,9 @@
     scene.dataset.art = "1";
     scene.setAttribute("aria-hidden", "true");
     scene.style.setProperty("--lamp", (0.25 + 0.75 * pct / 100).toFixed(3));
-    scene.innerHTML = G.art.clock(from) + G.art.hero;
+    // 零平时站在主角旁边；失踪期（第 26～35 天）那里只剩虚线空位（Mark_V072"零平时站的位置空着"）
+    const z = zeroAway() ? G.art.zero.replace('class="art-zero"', 'class="art-zero absent"') : G.art.zero;
+    scene.innerHTML = G.art.clock(from) + G.art.hero + `<div class="cityzero">${z}</div>`;
     if (pendingRing) {
       pendingRing = false;
       scene.classList.add("ringing");
@@ -170,6 +172,12 @@
     j.setAttribute("aria-hidden", "true");
     j.innerHTML = G.art.portraits.jar;
     app.insertBefore(j, app.firstChild);
+    if (jarCrack) j.querySelector(".art-jar").setAttribute("data-crack", jarCrack);
+  }
+
+  // 零线：第 28 天零的小红点换成静止的红色逗号（Mark_V077 的 .zerodot 占位）
+  function decorateZeroLine() {
+    app.querySelectorAll(".zerodot:not(.art)").forEach((d) => { d.classList.add("art"); d.innerHTML = G.art.zeroDot; });
   }
 
   // 第 40 天总结：图鉴每一节配魔鬼小像（按 data-id，没有就按顺序：宝箱魔、夜枭、无底渊）
@@ -215,7 +223,7 @@
 
   // 每一步各自独立：一步出错（比如引擎改了某个类名）只丢那一处画面，不拖垮其他步，也不影响游戏本身。
   // 错误照样打到控制台，tools/art/smoke.sh 会把它当失败。
-  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest, decorateJar, decorateFinale];
+  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest, decorateJar, decorateFinale, decorateZeroLine];
   function decorate() {
     STEPS.forEach((step) => {
       try {
@@ -251,6 +259,37 @@
   // 零复发：胸口那一点慢慢变成魔鬼红并停住，不闪、不脉冲、不配音效（Mary_to_Victoria_V006 一）。
   on("zero.relapse", () => { zeroEvent = "relapse"; app.querySelectorAll(".art-zero:not(.absent)").forEach((z) => z.classList.add("relapse")); });
   on("zero.return", () => { zeroEvent = "return"; app.querySelectorAll(".art-zero").forEach((z) => z.classList.remove("relapse")); });
+
+  // 第 26 天：旁白"零不在"——这一句上方是零的空位
+  on("zero.absent", () => {
+    const t = app.querySelector(".talk");
+    if (!t || t.querySelector(".talk-who")) return;
+    t.insertAdjacentHTML("afterbegin", `<div class="talk-who" aria-hidden="true">${G.art.zero.replace('class="art-zero"', 'class="art-zero absent"')}</div>`);
+  });
+  // 第 28 天：钟楼顶上的红光。死去的城，尖顶一点小红光，静止、不闪
+  on("zero.towerLight", () => {
+    setScene("city", true);
+    setWarmth(0);
+    document.body.classList.add("scene-on");
+    const b = ensureBackdrop();
+    let l = b.querySelector(".towerlight");
+    if (!l) { l = document.createElement("i"); l.className = "towerlight"; b.appendChild(l); }
+    // 背景是 cover + 顶部居中：按屏幕换算尖顶在城市图上的位置（横 50.7%、纵 10%）
+    const W = Math.max(innerWidth, innerHeight * 720 / 1052), H = W * 1052 / 720;
+    l.style.left = (innerWidth / 2 + (0.507 - 0.5) * W) + "px";
+    l.style.top = (0.10 * H) + "px";
+  });
+  // 第 31 天：每反驳一轮，破罐魔的裂缝深一层；第 3 轮歪倒、泄气
+  let jarCrack = 0;
+  on("jar.crack", (d) => {
+    jarCrack = Math.min(3, (d && d.round) || jarCrack + 1);
+    document.querySelectorAll(".art-jar").forEach((j) => j.setAttribute("data-crack", jarCrack));
+  });
+  // 第 36 天零回来：胸口的红 3 秒褪回暗红，身上亮一次暖光
+  on("zero.return", () => app.querySelectorAll(".art-zero").forEach((z) => { z.classList.remove("relapse", "absent"); z.classList.add("back"); }));
+  // 练习圈：认错——被点到的魔鬼歪一下、红眼亮一下，像在笑；认对——它的伪装褪成灰色虚线
+  on("loop.misread", (d) => app.querySelectorAll(`.ring .node-${d.demon}`).forEach((n) => { n.classList.remove("smirk"); void n.offsetWidth; n.classList.add("smirk"); }));
+  on("loop.recognized", (d) => app.querySelectorAll(`.ring .node-${d.demon}`).forEach((n) => n.classList.add("seen")));
 
   // 破罐魔：出场后每一屏的右上角都蹲着它（design 4.3"总在画面角落"），不动。
   // 它占自己的一小行，不叠在文字或按钮上（Mary 的出口规则）；退场就消失。

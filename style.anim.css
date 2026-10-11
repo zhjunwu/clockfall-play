@@ -261,6 +261,31 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .codexcell.outside { border: 1px dashed rgba(98, 214, 198, .5); color: var(--ink); }
 .codexcell.outside small { color: var(--muted); }
 
+/* ---------- 零线（第 26～36 天） ---------- */
+/* 城市上的零：站在主角右边；失踪期是虚线空位 */
+.cityscene .cityzero { position: absolute; left: 118px; bottom: 6px; width: 30px; height: 34px; }
+.cityscene .cityzero .art-zero { width: 100%; height: 100%; overflow: visible; }
+/* 第 28 天零的小红点：很淡、静止，不闪、不发光 */
+.zerodot.art .art-zerodot { width: 22px; height: 26px; opacity: .45; }
+/* 第 28 天钟楼顶上的红光 */
+.backdrop .towerlight { position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--demon-red); box-shadow: 0 0 6px rgba(224, 57, 43, .6); opacity: .85; z-index: 2; }
+/* 第 31 天破罐魔的裂缝：一轮深一层；第 3 轮歪倒、泄气（不碎、不爆） */
+.art-jar .jc { opacity: 0; transition: opacity .8s ease; }
+.art-jar[data-crack="1"] .jc1, .art-jar[data-crack="2"] .jc1, .art-jar[data-crack="2"] .jc2, .art-jar[data-crack="3"] .jc { opacity: 1; }
+.art-jar[data-crack="3"] { transform: rotate(-12deg) scale(.9, .84); transform-origin: 50% 90%; opacity: .7; transition: transform 1.2s ease-in, opacity 1.2s ease; }
+/* 反驳：说出口的那一句亮成琥珀 */
+.rebuttal .word:focus-visible { outline: 1px dashed var(--xray); outline-offset: 2px; }
+.rebuttal.said { color: var(--gold); text-shadow: 0 0 12px rgba(227, 169, 58, .25); transition: color 1.2s ease; }
+/* 第 36 天零回来：红褪回暗红（.dot 的 fill 本来就有 3 秒过渡），身上亮一次暖光 */
+.art-zero.back { animation: zeroback 3s ease-out 1; }
+@keyframes zeroback { 0% { filter: none; } 40% { filter: drop-shadow(0 0 10px rgba(227, 169, 58, .7)); } 100% { filter: none; } }
+/* 第 36 天零的钟：走过的段是琥珀，停过的段是灰——停过的那几段也在钟上，没有被抹掉 */
+.zeroclock .run { box-shadow: 0 0 8px rgba(227, 169, 58, .35); }
+/* 练习圈：认错时它得意地歪一下；认对时伪装褪掉 */
+.ring .node.smirk .upright > * { animation: smirk .6s ease-in-out 1; }
+@keyframes smirk { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-9deg); } 65% { transform: rotate(6deg); } }
+.ring .node.seen .upright > svg, .ring .node.seen .upright > .chest { opacity: .35; filter: grayscale(1); transition: opacity 1.2s ease, filter 1.2s ease; }
+
 /* ---------- 第 40 天总结（finale） ---------- */
 .finale .art-clock { display: block; width: min(56vw, 210px); height: auto; margin: 4px auto 8px; overflow: visible; }
 .finale .plain li { padding: 4px 0; border-bottom: 1px solid rgba(42, 49, 64, .6); }
@@ -296,6 +321,8 @@ body.fx-stop *, body.fx-stop *::before, body.fx-stop *::after { animation: none 
   .chest.art.shattered svg { animation: none; opacity: .7; }
   .feedcard.enter { animation: fadein .25s ease-out; }
   .cityscene.ringing .city-rings circle { animation: none; opacity: 0; }
+  .art-zero.back, .ring .node.smirk .upright > * { animation: none; }
+  .art-jar[data-crack="3"] { transition: none; }
   .pa-rings circle, .pa-demons .slip, .art-game .rise, .tv, .tv::before, .ring.spin .rot, .ring.spin .upright { animation: none; }
   .ghostdoor { animation: fadeout .6s ease-out forwards; }
   .wall.drawn-in .drawn { animation: none; }
