@@ -56,7 +56,7 @@
   function page4(d) {
     const c = G.t("finale.codex") || [];
     return `<p class="eyebrow">${fmt(G.t("finale.codexTitle"))}</p>
-      ${c.map((x) => `<section class="codexpage"><b>${esc(x.name)}</b><p class="hint">${esc(x.moves)}</p><p>${esc(x.counter)}</p><p class="real"><span class="eyebrow">${fmt(G.t("finale.realRecordLabel"))}</span> ${esc(realOf(x.id, d) || G.text("finale.gameOnly"))}</p></section>`).join("")}
+      ${c.map((x) => `<section class="codexpage" data-id="${esc(x.id)}"><b>${esc(x.name)}</b><p class="hint">${esc(x.moves)}</p><p>${esc(x.counter)}</p><p class="real"><span class="eyebrow">${fmt(G.t("finale.realRecordLabel"))}</span> ${esc(realOf(x.id, d) || G.text("finale.gameOnly"))}</p></section>`).join("")}
       ${btn("exportCodex", G.t("finale.exportCodex"), "btn-quiet")}
       <textarea id="codexBox" class="code" readonly hidden></textarea>`;
   }

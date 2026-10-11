@@ -18,10 +18,11 @@
   document.addEventListener("pointerdown", arm, true);
   document.addEventListener("keydown", arm, true);
 
-  function stopAll() {
-    playing.forEach((a) => { try { a.pause(); } catch (e) {} });
+  function stopAll(keep) {
+    playing.forEach((a) => { if (a !== keep) { try { a.pause(); } catch (e) {} } });
     playing.clear();
   }
+  let ringing = null;  // 第一季结束的钟声：赛季结束这个出口不掐断它
   document.addEventListener("visibilitychange", () => { if (document.hidden) stopAll(); });
 
   function play(name) {
@@ -35,6 +36,7 @@
       a.addEventListener("ended", () => playing.delete(a), { once: true });
       const p = a.play();
       if (p && p.catch) p.catch(() => playing.delete(a));
+      return a;
     } catch (e) {}
   }
 
@@ -61,11 +63,13 @@
   on("owl.phoneDown", () => play("phone_down"));
   on("district.revive", () => play("revive"));
   on("abyss.doorOpen", () => play("door_open"));
+  // 第一季结束：玩家按"离开"那一刻，大钟敲响一下（Mark_V076、V083）。低、远、余音长，全游戏只响这一次。
+  on("clock.ring", () => { ringing = play("clock_ring") || null; });
   // 刻意不出声：墙拒绝画门（abyss.doorRefused），那一下是"空"；长廊划卡（abyss.card），划动不该变得更顺手（Mary_to_Victoria_V010）。
 
   // 出口：离开这一局、去睡觉。立刻停，之后这次打开里不再出任何声音（出口那一下本身也不响）。
-  on("exit.tap", () => {
-    stopAll();
+  on("exit.tap", (d) => {
+    stopAll(d && d.choice === "seasonEnd" ? ringing : null);
     hushed = true;
   });
   on("sound.off", stopAll);

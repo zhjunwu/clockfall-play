@@ -9,7 +9,8 @@
   let shownPct = null;  // 上次画在城市上的格数，用来让"快一格"在回城时看得见
   let backdrop = null;
   const revivedNow = {};  // district.revive 当场触发时，不等存档就让城区复苏
-  let zeroEvent = null;    // zero.relapse / zero.return 当场触发时，不等存档
+  let zeroEvent = null;
+  let pendingRing = false; // clock.ring 之后，回到城市时大钟荡开钟声波纹    // zero.relapse / zero.return 当场触发时，不等存档
 
   // 零的状态：第 25 天"圈"之后失踪（复发），零线最后一局（zero5，第 36 天）救回。design 4.4。
   // 存档推算，重新打开也对；当场的事件优先。
@@ -91,6 +92,13 @@
     scene.setAttribute("aria-hidden", "true");
     scene.style.setProperty("--lamp", (0.25 + 0.75 * pct / 100).toFixed(3));
     scene.innerHTML = G.art.clock(from) + G.art.hero;
+    if (pendingRing) {
+      pendingRing = false;
+      scene.classList.add("ringing");
+      const enter = app.querySelector("#enter");
+      if (enter) { enter.classList.remove("btn-main"); enter.classList.add("btn-quiet"); app.classList.add("cityafter"); }
+      scene.insertAdjacentHTML("beforeend", `<svg class="pa-rings city-rings" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="60"/></svg>`);
+    }
     old.replaceWith(scene);
     setWarmth(from);
     if (from < pct) {
@@ -164,16 +172,32 @@
     app.insertBefore(j, app.firstChild);
   }
 
+  // 第 40 天总结：图鉴每一节配魔鬼小像（按 data-id，没有就按顺序：宝箱魔、夜枭、无底渊）
+  function decorateFinale() {
+    if (!/^finale/.test(G.router.current || "")) return;
+    const order = ["chest", "owl", "abyss"];
+    app.querySelectorAll(".codexpage:not(.art)").forEach((sec, i) => {
+      const id = sec.dataset.id || order[i];
+      sec.classList.add("art");
+      if (G.art.portraits[id]) sec.insertAdjacentHTML("afterbegin", `<div class="codexface" aria-hidden="true">${G.art.portraits[id]}</div>`);
+    });
+  }
+
   // 场景背景：城市、城区、零发呆
   function decorateScene() {
     const onCity = G.router.current === "city";
+    const finale = /^finale/.test(G.router.current || "");
     // 零发呆：背景是安睡态的钟楼区，"回家路上停住了"（Mark V065 第 3 条、Mary V053）
     const staring = !!app.querySelector(".stare");
     const level = onCity || document.body.classList.contains("xray") ? null : levelInProgress();
     const district = DISTRICT_OF[level];
     document.body.classList.toggle("scene-city", onCity);
-    document.body.classList.toggle("scene-on", onCity || !!district || staring);
-    if (staring) {
+    document.body.classList.toggle("scene-on", onCity || !!district || staring || finale);
+    if (finale) {
+      setScene("city", true);
+      setWarmth(clockPct());
+      setCold(0);
+    } else if (staring) {
       setScene("tower", true);
       setWarmth(55);  // 钟面光晕压一半，不和发呆那两句字抢（Mary_V060 A1）
       setCold(0);
@@ -191,7 +215,7 @@
 
   // 每一步各自独立：一步出错（比如引擎改了某个类名）只丢那一处画面，不拖垮其他步，也不影响游戏本身。
   // 错误照样打到控制台，tools/art/smoke.sh 会把它当失败。
-  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest, decorateJar];
+  const STEPS = [() => G.router.current === "prologue" && decoratePrologue(), decorateFeedArt, decorateSpeaker, decorateAbyss3, decorateScene, decorateChest, decorateJar, decorateFinale];
   function decorate() {
     STEPS.forEach((step) => {
       try {
@@ -282,7 +306,11 @@
   on("owl.lightsOut", () => app.querySelectorAll(".tvclock").forEach((c) => c.classList.add("past")));
 
   // 出口：瞬间生效。任何表现层的东西都不能让"离开"慢半拍。
-  on("exit.tap", () => {
+  // 第一季结束：大钟敲响。画面在回到城市之后才荡开，不拖慢离开（Mark_V076、V083）。
+  on("clock.ring", () => { pendingRing = true; });
+
+  on("exit.tap", (d) => {
+    if (d && d.choice === "seasonEnd") return;  // 赛季结束的离开之后要让钟声波纹荡完；城市此时本来就没有别的动画
     document.body.classList.add("fx-stop");
     const clear = () => { document.body.classList.remove("fx-stop"); document.removeEventListener("pointerdown", clear, true); };
     setTimeout(() => document.addEventListener("pointerdown", clear, true), 0);
