@@ -57,6 +57,11 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .art-zero.relapse .dot { fill: var(--demon-red); filter: drop-shadow(0 0 4px var(--demon-red)); }
 @keyframes tailsway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
 
+/* 对白屏里的零：小、靠左、在第一句话上方 */
+.talk-who { width: 56px; height: 62px; margin-bottom: -6px; }
+.talk-who .art-zero { width: 100%; height: 100%; overflow: visible; }
+.talk-who { animation: fadein .6s ease-out; }
+
 /* ---------- 空壳人：方形冷光极慢起伏，不规律，不闪（Mary_to_Victoria_V002 三） ---------- */
 .art-hollow .glare { opacity: .6; animation: glare 11s ease-in-out infinite; }
 .art-hollow:nth-child(2n) .glare { animation-duration: 13.7s; animation-delay: -4s; }

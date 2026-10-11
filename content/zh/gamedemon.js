@@ -51,12 +51,13 @@ Game.content.register("zh", "gamedemon", {
     "zero.nextTimeYou": "下次你自己认。",
   },
   fn: {
-    // 被打败：讲离开对它的伤害，强化"离开是胜利"。按局数变化，但一句都不提下一次。
-    "gameDemonDefeated"({ session }) {
+    // 被打败：讲离开对它的伤害，强化"离开是胜利"。一句都不提下一次。
+    // faster：这一次按住比之前几局的中位数快（真实数据），才说"越来越快"。
+    "gameDemonDefeated"({ session, faster }) {
       const s = session || 1;
       if (s <= 1) return "……你走了。这一下挺疼。";
-      if (s <= 3) return "又走了。";
-      if (s <= 8) return "你走得越来越快了。";
+      if (faster) return "你走得越来越快了。";
+      if (s <= 8) return "又走了。";
       return "……行。";
     },
     // 最后一战的台词，由本局数据生成。不说"你真棒"。

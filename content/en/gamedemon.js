@@ -47,12 +47,13 @@ Game.content.register("en", "gamedemon", {
     "zero.nextTimeYou": "Next time you name it.",
   },
   fn: {
-    // Beaten: it talks about what leaving does to it. Varies by session. Never mentions next time.
-    "gameDemonDefeated"({ session }) {
+    // Beaten: it talks about what leaving does to it. Never mentions next time.
+    // faster: this hold was quicker than the median of earlier sessions (real data) — only then "quicker".
+    "gameDemonDefeated"({ session, faster }) {
       const s = session || 1;
       if (s <= 1) return "...You're going. That one stung.";
-      if (s <= 3) return "Gone again.";
-      if (s <= 8) return "You're getting quicker at that.";
+      if (faster) return "You're getting quicker at that.";
+      if (s <= 8) return "Gone again.";
       return "...Fine.";
     },
     // The end-fight line, built from what the player just did. No "well done".

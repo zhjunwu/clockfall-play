@@ -8,7 +8,8 @@
   const app = document.getElementById("app");
   let shownPct = null;  // 上次画在城市上的格数，用来让"快一格"在回城时看得见
   let backdrop = null;
-  const revivedNow = {};  // district.revive 当场触发时，不等存档就让城区复苏
+  const revivedNow = {};
+  let zeroRelapsed = false;  // zero.relapse 到 zero.return 之间（零线第二阶段才会触发）  // district.revive 当场触发时，不等存档就让城区复苏
 
   function clockPct() {
     try {
@@ -107,8 +108,20 @@
     el.innerHTML = G.art.prologue(el.dataset.art);
   }
 
+  // 对白屏：零说话时，对白上方出现零的剪影（Victoria_V005 下一步 2）。
+  function decorateSpeaker() {
+    const t = app.querySelector(".talk.zero");
+    if (!t || t.querySelector(".talk-who")) return;
+    const who = document.createElement("div");
+    who.className = "talk-who";
+    who.setAttribute("aria-hidden", "true");
+    who.innerHTML = zeroRelapsed ? G.art.zero.replace('class="art-zero"', 'class="art-zero relapse"') : G.art.zero;
+    t.insertBefore(who, t.firstChild);
+  }
+
   function decorate() {
     if (G.router.current === "prologue") decoratePrologue();
+    decorateSpeaker();
     const onCity = G.router.current === "city";
     const level = onCity || document.body.classList.contains("xray") ? null : levelInProgress();
     const district = DISTRICT_OF[level];
@@ -148,6 +161,10 @@
     setWarmth(100);
     setCold(0);
   });
+
+  // 零复发：胸口那一点慢慢变成魔鬼红并停住，不闪、不脉冲、不配音效（Mary_to_Victoria_V006 一）。
+  on("zero.relapse", () => { zeroRelapsed = true; app.querySelectorAll(".art-zero").forEach((z) => z.classList.add("relapse")); });
+  on("zero.return", () => { zeroRelapsed = false; app.querySelectorAll(".art-zero").forEach((z) => z.classList.remove("relapse")); });
 
   // 无底渊：卡片"刷"走。引擎换卡后才发事件，所以每次留一份副本，下一张来时让副本向上滑走（Mary_to_Victoria_V006 二）。
   let lastCard = null;

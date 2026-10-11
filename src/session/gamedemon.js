@@ -133,6 +133,11 @@
     // 第 1 局是零手把手教，不计入连续计数
     if (!input.first) updateStreaks(firstHold);
     G.events.log("endfight.stop", { appearToHoldMs: stop.appearToHoldMs == null ? -1 : Math.round(stop.appearToHoldMs), released: stop.released, surfSec: sec, held: true });
+    // "走得越来越快"必须来自数据：这一次按住比之前几局的中位数快才算（Mary_V050 A2）
+    const prevHolds = (G.state.get().player.holdHistory || []).slice();
+    const median = (a) => { const b = a.slice().sort((x, y) => x - y); const m = Math.floor(b.length / 2); return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
+    const faster = stop.appearToHoldMs != null && prevHolds.length >= 2 && stop.appearToHoldMs < median(prevHolds);
+    if (stop.appearToHoldMs != null) G.state.update((s) => (s.player.holdHistory = (s.player.holdHistory || []).concat(Math.round(stop.appearToHoldMs)).slice(-20)));
 
     const name = await stepName({ first: input.first, endHook: input.endHook });
     G.events.log("endfight.name", { hook: input.endHook, answer: name.answer, correct: name.correct });
@@ -166,7 +171,7 @@
 
     await G.screens.talk({
       speaker: "demon",
-      lines: choice === "noUrge" ? G.t("gameDemon.noUrge") : G.f("gameDemonDefeated", { session: input.sessionIndex }),
+      lines: choice === "noUrge" ? G.t("gameDemon.noUrge") : G.f("gameDemonDefeated", { session: input.sessionIndex, faster }),
       nextLabel: G.t("talk.leaveNow"),
     });
     // 玩家点了出口：立即停掉所有动画和声音，然后魔鬼退场

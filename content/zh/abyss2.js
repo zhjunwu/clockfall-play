@@ -61,6 +61,7 @@ Game.content.register("zh", "abyss2", {
     "abyss2.doorTempt": "门外什么都没有，里面还有好多。",
     "abyss2.doorOut": "出去",
     "abyss2.yours": "这是你自己定的。",
+    "abyss2.leftBeforeDoor": "门还没亮，你就自己出来了。",
 
     // ---- 现实任务 ----
     "abyss2.realQ": "选一扇现实里的门。",

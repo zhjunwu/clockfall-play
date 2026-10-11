@@ -225,14 +225,14 @@
         if (door.type === "feel" && !lit) return light(); // 感觉门：玩家自己觉得到了就点它
         if (held) {
           G.events.log("abyss2.door", { option: door.type, count: k });
-          resolve({ k, seen: seen + 1 });
+          resolve({ k, seen: seen + 1, lit: true });
         }
       });
       // 出口一直在：门没亮也可以直接出去（也是一次停）
       $("#exit").addEventListener("click", () => {
         clearInterval(timer);
         G.events.log("abyss2.door", { option: "plainExit", count: k });
-        resolve({ k, seen: seen + 1, plainExit: true });
+        resolve({ k, seen: seen + 1, plainExit: true, lit });
       });
       G.hold.attach($("#surf"), {
         onProgress: (p) => $("#bar").style.setProperty("--p", Math.round(p * 100)),
@@ -310,8 +310,9 @@
       ctx.door = await chooseType();
       const r = await corridor(ctx.door);
       G.ledger.tick("training");
-      await talk({ speaker: "zero", lines: [G.t("abyss2.yours"), G.f("abyss2.doorResult", { k: r.k })] });
-      G.state.update((s) => (s.sessions.abyss2 = Object.assign(s.sessions.abyss2 || {}, { door: { type: ctx.door.type, v: ctx.door.v, k: r.k }, gaps: ctx.gaps, refused: ctx.refused })));
+      // 门没亮就自己出来：不说"这是你自己定的"，也不说"门一亮你就停了"（Mary_V050 A1）
+      await talk({ speaker: "zero", lines: r.lit ? [G.t("abyss2.yours"), G.f("abyss2.doorResult", { k: r.k })] : G.t("abyss2.leftBeforeDoor") });
+      G.state.update((s) => (s.sessions.abyss2 = Object.assign(s.sessions.abyss2 || {}, { door: { type: ctx.door.type, v: ctx.door.v, k: r.k, lit: !!r.lit }, gaps: ctx.gaps, refused: ctx.refused })));
     },
     // 现实里的门
     async (ctx) => {

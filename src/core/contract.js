@@ -168,7 +168,7 @@
       "abyss2.xray.zero1", "abyss2.xray.zero2", "abyss2.xray.abyss", "abyss2.xray.zero3",
       "abyss2.inside.eyebrow", "abyss2.inside.go", "abyss2.inside.nowDraw", "abyss2.drawBtn", "abyss2.inside.refused", "abyss2.inside.zero",
       "abyss2.wall.eyebrow", "abyss2.wall.say", "abyss2.wall.hint", "abyss2.type.q", "abyss2.types",
-      "abyss2.corridor.eyebrow", "abyss2.door", "abyss2.feelTap", "abyss2.doorTempt", "abyss2.doorOut", "abyss2.yours",
+      "abyss2.corridor.eyebrow", "abyss2.door", "abyss2.feelTap", "abyss2.doorTempt", "abyss2.doorOut", "abyss2.yours", "abyss2.leftBeforeDoor",
       "abyss2.realQ", "abyss2.realOptions", "abyss2.realDone",
       "codex.doors.title", "codex.doors.seen", "codex.doors.practiced", "codex.doors.real", "codex.doors.realNote",
     ],
