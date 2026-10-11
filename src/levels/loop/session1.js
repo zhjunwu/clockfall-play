@@ -241,7 +241,8 @@
       const c = pick.cue || {};
       G.state.update((s) => (s.player.loop = Object.assign(s.player.loop || {}, { cutLink: { slot: pick.slot, id: pick.id } })));
       G.events.log("loop.cut", { option: linkKind(pick), count: ctx.links.indexOf(pick) });
-      await talk({ speaker: "zero", lines: [G.f("loop.cutHow", { slot: pick.slot, id: pick.id, when: c.when, where: c.where }), G.t("loop.cutDone")] });
+      const helpNote = pick.id === "mood" ? `<p class="hint helpnote">${fmt(G.t("loop.moodHelp"))}</p>` : "";
+      await talk({ speaker: "zero", lines: [G.f("loop.cutHow", { slot: pick.slot, id: pick.id, when: c.when, where: c.where }), G.t("loop.cutDone")], extraHtml: helpNote });
       G.state.update((s) => (s.sessions.loop = { links: ctx.links.length, cracks: ctx.cracks, misses: ctx.practiceMisses, cut: pick.slot }));
     },
     // 零发呆；runner 随后安静亮牌

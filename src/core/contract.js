@@ -196,7 +196,7 @@
       "loop.yours", "loop.mine.hint", "loop.mine.options", "loop.mine.empty", "loop.mine.done", "loop.mine.saved", "loop.noCrack", "loop.cutOne",
       "loop.practice.eyebrow", "loop.practice.intro", "loop.practice.whisper", "loop.practice.tapDemon", "loop.practice.again", "loop.practice.right",
       "loop.gesture.chest", "loop.gesture.owl", "loop.gesture.abyss", "loop.gesture.alt", "loop.practice.stopped", "loop.demonNames",
-      "loop.cutQ", "loop.cutMine", "loop.cutDone", "loop.stare",
+      "loop.cutQ", "loop.cutMine", "loop.cutDone", "loop.moodHelp", "loop.stare",
     ],
     fns: ["loop.cueLabel", "loop.cracks", "loop.cutHow"],
   };
