@@ -116,7 +116,7 @@
         nextDay = Math.max(next.earliestDay, st.calendar.sessionDoneOnDay[day] ? day + 1 : day);
         inMin = nextDay > day ? Math.max(1, Math.ceil((st.startedAt + (nextDay - 1) * m * 60000 - Date.now()) / 60000)) : 0;
       }
-      note = `<p class="hint fastnote">${fmt(G.f("test.fastday", { minutes: m, day, nextDay, inMin }))}</p>` + note;
+      note = `<p class="hint fastnote">${fmt(G.f("test.fastday", { minutes: m, day, nextDay, inMin, hour: G.config.fastHour }))}</p>` + note;
     }
     if (opts.closedNote) note = `<p class="hint">${fmt(G.t("gameDemon.closedIsLeave"))}</p>`;
     let patrolBtn = "";

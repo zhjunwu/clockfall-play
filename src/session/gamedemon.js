@@ -202,7 +202,7 @@
   // 带停止点继续：只开放图鉴与复习（M1 里只有倒计时与图鉴占位），到点游戏魔再出现。
   function stayMode(min) {
     return new Promise((resolve) => {
-      const end = Date.now() + min * 60000;
+      const end = Date.now() + min * (G.config.stayMsPerMinute || 60000);
       G.router.show(`
         <div class="stack center">
           <p class="eyebrow">${fmt(G.t("codex.title"))}</p>

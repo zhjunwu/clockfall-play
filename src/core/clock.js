@@ -68,7 +68,13 @@
       if (o.hour < cfg().dayStartHour) d.setDate(d.getDate() + 1);
       return d.getTime();
     }
-    if (cfg().fastDayMinutes && s.startedAt) return _fastNow(Date.now(), s.startedAt, cfg().fastDayMinutes);
+    if (cfg().fastDayMinutes && s.startedAt) {
+      const t = _fastNow(Date.now(), s.startedAt, cfg().fastDayMinutes);
+      if (cfg().fastHour == null) return t;
+      const d = new Date(t);
+      d.setHours(cfg().fastHour);
+      return d.getTime();
+    }
     return Date.now();
   }
 
@@ -120,7 +126,10 @@
   // 某个时间戳属于第几个游戏日（补记用）
   function dayOfTimestamp(ts) {
     const s = G.state.get();
-    return s.startedAt ? _dayOf(ts, s.startedAt, cfg().dayStartHour) : 0;
+    if (!s.startedAt) return 0;
+    // 快进模式：存下来的是真实时间戳，先换算成快进后的时间再算游戏日
+    const t = cfg().fastDayMinutes ? _fastNow(ts, s.startedAt, cfg().fastDayMinutes) : ts;
+    return _dayOf(t, s.startedAt, cfg().dayStartHour);
   }
 
   // 记一局完成。day 可选：补记"关掉即离开"时用玩的那天，而不是重新打开的那天。

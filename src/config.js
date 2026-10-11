@@ -14,6 +14,14 @@
       const v = parseFloat(params.get("fastday"));
       return v > 0 && v <= 1440 ? v : 0;
     })(),
+    // 快进模式下可以固定钟点：&hour=23 测深夜分支（23:00～05:59），不用真的半夜玩。只在 fastday 下生效
+    fastHour: (() => {
+      if (!(parseFloat(params.get("fastday")) > 0)) return null;
+      const h = parseInt(params.get("hour"), 10);
+      return h >= 0 && h <= 23 ? h : null;
+    })(),
+    // "带停止点继续"每 1 分钟的真实毫秒数：快进模式下 1 分钟 = 10 秒
+    stayMsPerMinute: parseFloat(params.get("fastday")) > 0 ? 10000 : 60000,
 
     // 时间
     dayStartHour: 6, // 游戏日边界：本地 06:00

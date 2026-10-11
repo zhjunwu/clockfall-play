@@ -49,8 +49,8 @@ Game.content.register("zh", "common", {
   },
   fn: {
     // 只在 ?fastday= 测试模式出现
-    "test.fastday"({ minutes, day, nextDay, inMin }) {
-      const head = `测试模式：${minutes} 分钟 = 1 天。现在是第 ${day} 天。`;
+    "test.fastday"({ minutes, day, nextDay, inMin, hour }) {
+      const head = `测试模式：${minutes} 分钟 = 1 天。现在是第 ${day} 天。` + (hour != null ? `钟点固定为 ${hour} 点。` : "");
       if (!nextDay) return head;
       return inMin ? `${head}下一局：第 ${nextDay} 天（约 ${inMin} 分钟后，到时刷新页面）。` : `${head}下一局现在可以玩。`;
     },
