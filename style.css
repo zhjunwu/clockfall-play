@@ -439,3 +439,8 @@ button.loopnode { cursor: pointer; }
 .stare.near .zeroshape { left: 64px; }
 @keyframes loopSpin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .loopring.spin .loopline { animation: none; } }
+.ringwrap { position: relative; width: min(300px, 80vw); margin: 8px auto; }
+.ringwrap .loopring { width: 100%; margin: 0; }
+.ringhits { position: absolute; inset: 0; }
+.ringhit { width: 64px; height: 64px; background: transparent; border: 1px dashed transparent; border-radius: 50%; padding: 0; }
+.ringhit:focus-visible { border-color: var(--xray); }

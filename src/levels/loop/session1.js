@@ -11,26 +11,38 @@
   const PREFIX_CUE = "cue:", PREFIX_TXT = "text" + ":";
   const linkKind = (l) => l.slot + "-" + (l.id.startsWith(PREFIX_CUE) ? "cue" : l.id.startsWith(PREFIX_TXT) ? "custom" : l.id);
 
-  // 一个圈：nodes = [{ id, label, cls }]，cracks = 裂缝数
+  // 一个圈：nodes = [{ id, label, cls, who }]，opts = { buttons, spin, cracks }
+  // 有 Victoria 的 Game.art.ring 就用它画；需要点的时候（练习圈），在同样的位置叠一层透明按钮（圈停转后才出现）。
+  const R = 38;
+  const pos = (i, n) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; return [50 + R * Math.cos(a), 50 + R * Math.sin(a)]; };
   function ringHtml(nodes, opts) {
     opts = opts || {};
-    if (G.art && G.art.loopRing) return G.art.loopRing(nodes, opts);
-    const n = nodes.length;
-    const items = nodes
-      .map((x, i) => {
-        const a = (i / n) * 2 * Math.PI - Math.PI / 2;
-        const style = `left:${50 + 38 * Math.cos(a)}%;top:${50 + 38 * Math.sin(a)}%`;
-        const tag = opts.buttons ? "button" : "div";
-        return `<${tag} ${opts.buttons ? 'type="button"' : ""} class="loopnode ${x.cls || ""}" data-id="${esc(x.id)}" style="${style}">${esc(x.label)}</${tag}>`;
-      })
-      .join("");
+    const n = nodes.length || 1;
+    const hits = opts.buttons
+      ? `<div class="ringhits" hidden>${nodes.map((x, i) => { const [l, t] = pos(i, n); return `<button type="button" class="loopnode ringhit ${x.cls || ""}" data-id="${esc(x.id)}" style="left:${l.toFixed(1)}%;top:${t.toFixed(1)}%" aria-label="${esc(x.label)}"></button>`; }).join("")}</div>`
+      : "";
+    if (G.art && G.art.ring) {
+      const art = G.art.ring({ nodes: nodes.map((x) => ({ who: x.who || "none", label: esc(x.label), on: (x.cls || "").includes("active") })), cracks: opts.cracks || 0, spin: !!opts.spin });
+      return `<div class="ringwrap">${art}${hits}</div>`;
+    }
+    const items = nodes.map((x, i) => { const [l, t] = pos(i, n); return `<div class="loopnode ${x.cls || ""}" style="left:${l}%;top:${t}%">${esc(x.label)}</div>`; }).join("");
     const cracks = Array.from({ length: Math.min(opts.cracks || 0, 12) }, (_, i) => `<i class="crack" style="--r:${(i * 360) / Math.max(1, Math.min(opts.cracks, 12)) + 20}deg"></i>`).join("");
-    return `<div class="loopring ${opts.spin ? "spin" : ""}" aria-hidden="${opts.buttons ? "false" : "true"}"><div class="loopline"></div>${cracks}${items}</div>`;
+    return `<div class="ringwrap"><div class="loopring ${opts.spin ? "spin" : ""}" aria-hidden="true"><div class="loopline"></div>${cracks}${items}</div>${hits}</div>`;
   }
+  // 你的圈每一环画成什么：开始 = 小红点；停不下来 / 后果里是魔鬼的用它的小像
+  const whoOf = (l) => (l.slot === "start" ? "dot" : ["chest", "abyss", "owl"].includes(l.id) ? l.id : "none");
 
+  // 墙上的圈：小红点（开始）→ 宝箱魔、无底渊（停不下来）→ 夜枭（后果）→ 回到开始
   function wallNodes() {
-    const slots = G.t("loop.slots"), w = G.t("loop.wallNodes");
-    return (Array.isArray(slots) ? slots : []).map((s) => ({ id: s.id, label: `${s.label}：${(w && w[s.id]) || ""}` }));
+    const slots = G.t("loop.slots"), names = G.t("loop.demonNames") || {};
+    const sl = {};
+    (Array.isArray(slots) ? slots : []).forEach((x) => (sl[x.id] = x.label));
+    return [
+      { id: "start", who: "dot", label: sl.start || "" },
+      { id: "chest", who: "chest", label: `${sl.hold || ""}：${names.chest || ""}` },
+      { id: "abyss", who: "abyss", label: names.abyss || "" },
+      { id: "owl", who: "owl", label: `${sl.after || ""}：${names.owl || ""}` },
+    ];
   }
 
   // ---- 你的圈 ----
@@ -78,7 +90,7 @@
   function turn(demon) {
     const names = G.t("loop.demonNames") || {};
     const wh = G.t("loop.practice.whisper") || {};
-    const nodes = DEMONS.map((d) => ({ id: d, label: names[d] || d, cls: d === demon ? "active" : "" }));
+    const nodes = DEMONS.map((d) => ({ id: d, who: d, label: names[d] || d, cls: d === demon ? "active" : "" }));
     return new Promise((resolve) => {
       G.router.show(`
         <div class="stack">
@@ -97,7 +109,10 @@
           held = true;
           $("#surf").hidden = true;
           $("#hint").textContent = G.text("loop.practice.tapDemon");
-          G.router.el.querySelector(".loopring").classList.remove("spin");
+          // 停转（节点回到起始位置），然后才能点
+          G.router.$$(".spin").forEach((el) => el.classList.remove("spin"));
+          const h = G.router.el.querySelector(".ringhits");
+          if (h) h.hidden = false;
         },
       });
       G.router.$$(".loopnode").forEach((b) =>
@@ -199,7 +214,7 @@
       if (ctx.links.some((l) => l.slot === "after" && l.id === "mood")) G.safety.bump("mood");
       G.state.update((s) => (s.player.loop = Object.assign(s.player.loop || {}, { links: ctx.links.map((l) => ({ slot: l.slot, id: l.id, label: l.label })) })));
       G.events.log("loop.mine", { count: ctx.links.length, option: ctx.links.map(linkKind).join("+") });
-      await talk({ speaker: "zero", lines: G.t("loop.mine.saved"), extraHtml: ringHtml(ctx.links.map((l) => ({ id: l.slot, label: l.label }))) });
+      await talk({ speaker: "zero", lines: G.t("loop.mine.saved"), extraHtml: ringHtml(ctx.links.map((l) => ({ id: l.slot, who: whoOf(l), label: l.label }))) });
       await G.safety.maybeShow("zero");
     },
     // 裂缝：真实的"当时注意到并按住了"
@@ -207,7 +222,7 @@
       const n = G.state.get().ledger.stops.filter((x) => x.kind === "noticed" && x.what === "held").length;
       ctx.cracks = n;
       G.fx.play("loop.cracks", { n });
-      await talk({ speaker: "zero", lines: [].concat(n ? G.f("loop.cracks", { n }) : G.t("loop.noCrack"), G.t("loop.cutOne")), extraHtml: ringHtml(ctx.links.map((l) => ({ id: l.slot, label: l.label })), { cracks: n }) });
+      await talk({ speaker: "zero", lines: [].concat(n ? G.f("loop.cracks", { n }) : G.t("loop.noCrack"), G.t("loop.cutOne")), extraHtml: ringHtml(ctx.links.map((l) => ({ id: l.slot, who: whoOf(l), label: l.label })), { cracks: n }) });
     },
     // 练习圈
     async (ctx) => {
