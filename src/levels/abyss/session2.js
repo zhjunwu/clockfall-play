@@ -327,4 +327,5 @@
 
   G.levels.abyss = G.levels.abyss || {};
   G.levels.abyss.session2 = session2;
+  G.levels.abyss.swipeLayer = swipeLayer;
 })();

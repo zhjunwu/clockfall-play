@@ -15,7 +15,7 @@
     { id: "owl3", level: "owl", key: "session3", earliestDay: 13, endHook: "cliffhanger", playable: true, patrolDetail: false },
     { id: "abyss1", level: "abyss", key: "session1", earliestDay: 17, endHook: "escalation", flagId: "flag.escalationAbyss", playable: true },
     { id: "abyss2", level: "abyss", key: "session2", earliestDay: 19, endHook: "collection", playable: true, patrolDetail: false },
-    { id: "abyss3", level: "abyss", key: "session3", earliestDay: 22, endHook: "tbd" },
+    { id: "abyss3", level: "abyss", key: "session3", earliestDay: 22, endHook: "cliffhanger", quietFlag: true, playable: true, patrolDetail: false },
     { id: "loop", level: "loop", key: "session1", earliestDay: 25, endHook: "cliffhanger", quietFlag: true },
     { id: "zero1", level: "zero", key: "session1", earliestDay: 26, endHook: "tbd" },
     { id: "zero2", level: "zero", key: "session2", earliestDay: 28, endHook: "tbd" },

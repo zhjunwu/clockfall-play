@@ -108,30 +108,34 @@
     el.innerHTML = G.art.prologue(el.dataset.art);
   }
 
-  // 对白屏：零说话时，对白上方出现零的剪影（Victoria_V005 下一步 2）。
+  // 对白屏：零和魔鬼说话时，第一句上方出现小像（零：Victoria_V010；魔鬼：Victoria_V013）。
   function decorateSpeaker() {
-    const t = app.querySelector(".talk.zero");
+    const t = app.querySelector(".talk");
     if (!t || t.querySelector(".talk-who")) return;
+    let html = "";
+    if (t.classList.contains("zero")) html = zeroRelapsed ? G.art.zero.replace('class="art-zero"', 'class="art-zero relapse"') : G.art.zero;
+    else for (const k in G.art.portraits) if (t.classList.contains(k)) html = G.art.portraits[k];
+    if (!html) return;
     const who = document.createElement("div");
     who.className = "talk-who";
     who.setAttribute("aria-hidden", "true");
-    who.innerHTML = zeroRelapsed ? G.art.zero.replace('class="art-zero"', 'class="art-zero relapse"') : G.art.zero;
+    who.innerHTML = html;
     t.insertBefore(who, t.firstChild);
   }
 
-  // 长廊卡片：色块换成主语对应的小场景（content 的主语按 n % 12 轮换，画也按 n % 12）。
-  function decorateFeedArt() {
-    app.querySelectorAll(".feedcard[data-n] .feedart:not(.art)").forEach((el) => {
-      const n = Number(el.closest(".feedcard").dataset.n) % 12;
-      el.classList.add("art");
-      el.style.backgroundImage = `url(assets/img/feed/s${String(n).padStart(2, "0")}.webp)`;
-    });
+  // 无底渊第 3 局：零发呆那一屏换成零的剪影；走向长廊的信使换成人形剪影（Mark_to_Victoria_V011）
+  function decorateAbyss3() {
+    const z = app.querySelector(".stareart .zeroshape:not(.art)");
+    if (z) { z.classList.add("art"); z.innerHTML = G.art.zero; }
+    const w = app.querySelector(".messengerlane .walker:not(.art)");
+    if (w) { w.classList.add("art"); w.innerHTML = G.art.walker; }
   }
 
   function decorate() {
     if (G.router.current === "prologue") decoratePrologue();
     decorateFeedArt();
     decorateSpeaker();
+    decorateAbyss3();
     const onCity = G.router.current === "city";
     const level = onCity || document.body.classList.contains("xray") ? null : levelInProgress();
     const district = DISTRICT_OF[level];
@@ -192,6 +196,22 @@
     lastCard = card.cloneNode(true);
     lastCard.classList.remove("enter");
   });
+
+  // 无底渊第 2 局：在长廊里画门，墙不接受——一道淡灰的门框一闪就散，"空"，不是惩罚（Mark_to_Victoria_V010）。
+  on("abyss.doorRefused", () => {
+    const feed = app.querySelector(".feed");
+    if (!feed) return;
+    const d = document.createElement("i");
+    d.className = "ghostdoor";
+    d.setAttribute("aria-hidden", "true");
+    feed.appendChild(d);
+    d.addEventListener("animationend", () => d.remove(), { once: true });
+    setTimeout(() => d.remove(), 1500);
+  });
+  // 门外画门：青色线条描出来；门亮 = 青；门开 = 门里透出琥珀光
+  on("abyss.doorDrawn", () => app.querySelectorAll(".wall").forEach((w) => w.classList.add("drawn-in")));
+  on("abyss.doorLit", () => app.querySelectorAll(".wall").forEach((w) => w.classList.add("lit")));
+  on("abyss.doorOpen", () => app.querySelectorAll(".wall").forEach((w) => w.classList.add("open")));
 
   // 夜枭：过了关灯时间，时钟从中性变成屏幕的冷白。
   on("owl.lightsOut", () => app.querySelectorAll(".tvclock").forEach((c) => c.classList.add("past")));

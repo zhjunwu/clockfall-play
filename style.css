@@ -398,3 +398,25 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .codexcell.on { border: 1px solid var(--gold); color: var(--gold); }
 .codexcell.outside { border-style: dotted; }
 @media (prefers-reduced-motion: reduce) { .refused.flash { animation: none; } .strip .gap { transition: none; } }
+
+/* 无底渊第 3 局 */
+.feedhold { position: fixed; left: 16px; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 5; width: min(200px, 50%); }
+.walldoor { transition: transform .6s, opacity .6s; }
+.walldoor.pushed { transform: translateY(140%); }
+.walldoor.dim .doorbtn { opacity: .35; }
+.walldoor.fade .doorbtn { color: transparent; text-shadow: 0 0 6px var(--muted); }
+.messengerlane { position: relative; height: 26vh; border-radius: 12px; background: linear-gradient(90deg, #12151c, #1a1d26); overflow: hidden; }
+.messengerlane .walker { --p: 0; position: absolute; bottom: 18%; left: calc(4% + var(--p) * 62%); width: 18px; height: 38px; border-radius: 9px 9px 4px 4px; background: var(--muted); transition: left .1s linear, opacity .4s; }
+.messengerlane .walker.inside { opacity: 0; }
+.messengerlane .walker.stopped { background: var(--gold); }
+.messengerlane .wall.entrance { position: absolute; right: 4%; top: 10%; bottom: 10%; width: 28%; height: auto; }
+.stare { align-items: center; text-align: center; min-height: 50vh; justify-content: center; }
+.stareart { position: relative; width: 160px; height: 120px; }
+.stareart .zeroshape { position: absolute; left: 20px; bottom: 10px; width: 36px; height: 36px; border-radius: 50%; background: var(--muted); }
+.stareart .zeroshape::after { content: ""; position: absolute; right: -10px; bottom: -6px; width: 14px; height: 14px; border-radius: 0 0 14px 0; border-right: 4px solid var(--muted); border-bottom: 4px solid var(--muted); animation: tailSway 4s ease-in-out infinite; transform-origin: top left; }
+.stareart .reddot { position: absolute; right: 18px; bottom: 30px; width: 8px; height: 8px; border-radius: 50%; background: var(--demon-red, #c0392b); animation: dotBreath 6s ease-in-out infinite; }
+@keyframes tailSway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
+@keyframes dotBreath { 0%, 100% { opacity: .55; } 50% { opacity: .9; } }
+.fadein:not([hidden]) { animation: fadeIn .8s ease-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .stareart .zeroshape::after, .stareart .reddot, .fadein:not([hidden]) { animation: none; } .walldoor { transition: none; } .messengerlane .walker { transition: none; } }

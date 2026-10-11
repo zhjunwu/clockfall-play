@@ -88,6 +88,48 @@
     <rect class="glare" x="14" y="15" width="12" height="7" rx="1" fill="#cfe3f0"/>
   </svg>`;
 
+  // ---------- 魔鬼小像（对白屏第一句上方）。小、油滑、得意，不威风（Mary_to_Victoria_V002 二）。红只在眼睛。 ----------
+  // 夜枭：圆滚滚的猫头鹰，两只眼睛是钟面，指针指着 1 点和 2 点，钟心一点红
+  const eye = (cx) => `<circle cx="${cx}" cy="34" r="11" fill="#1b2130" stroke="#8f94a3" stroke-width="1.5"/>
+    <line x1="${cx}" y1="34" x2="${cx + 5}" y2="25" stroke="#c9c3b3" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="${cx}" y1="34" x2="${cx + 8.5}" y2="29" stroke="#c9c3b3" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="34" r="1.8" fill="var(--demon-red)"/>`;
+  const owl = `<svg class="art-demon art-owl" viewBox="0 0 80 80" aria-hidden="true">
+    <path d="M18 22 L24 10 L30 20 Q40 16 50 20 L56 10 L62 22 Q70 40 64 60 Q58 76 40 76 Q22 76 16 60 Q10 40 18 22 Z" fill="#07090d" stroke="#2a3140" stroke-width="1.5"/>
+    ${eye(28)}${eye(52)}<path d="M37 46 L40 51 L43 46 Z" fill="#2a3140"/></svg>`;
+
+  // 无底渊：一层层缩进的拱门，尽头长出一张脸
+  let arches = "";
+  for (let i = 0; i < 5; i++) {
+    const k = Math.pow(0.74, i), w = 64 * k, h = 70 * k, x = 40 - w / 2, y = 76 - h;
+    arches += `<path d="M${x.toFixed(1)} 76 V${(y + w / 2).toFixed(1)} A${(w / 2).toFixed(1)} ${(w / 2).toFixed(1)} 0 0 1 ${(x + w).toFixed(1)} ${(y + w / 2).toFixed(1)} V76" fill="none" stroke="#5b6070" stroke-opacity="${(1 - i * 0.15).toFixed(2)}" stroke-width="1.5"/>`;
+  }
+  const abyss = `<svg class="art-demon art-abyss" viewBox="0 0 80 80" aria-hidden="true">
+    <rect width="80" height="80" rx="10" fill="#07090d"/>${arches}
+    <circle cx="36" cy="58" r="1.6" fill="var(--demon-red)"/><circle cx="44" cy="58" r="1.6" fill="var(--demon-red)"/>
+    <path d="M33 63 Q40 68 47 63" fill="none" stroke="#8f94a3" stroke-width="1.3" stroke-linecap="round"/></svg>`;
+
+  // 游戏魔："继续"按钮的影子站起来了。没有形状，只有影子和两点红
+  const gameDemon = `<svg class="art-demon art-game" viewBox="0 0 80 80" aria-hidden="true">
+    <rect x="14" y="66" width="52" height="10" rx="5" fill="none" stroke="#2a3140" stroke-width="1.5"/>
+    <path class="rise" d="M22 70 Q20 40 30 20 Q40 6 50 20 Q60 40 58 70 Z" fill="#05060a" opacity=".92"/>
+    <circle cx="35" cy="30" r="1.8" fill="var(--demon-red)"/><circle cx="45" cy="30" r="1.8" fill="var(--demon-red)"/></svg>`;
+
+  // 破罐魔：裂了缝的小罐子，缝就是它的笑。不动（Victoria_V001：越静越像内心声音）
+  const jar = `<svg class="art-demon art-jar" viewBox="0 0 80 80" aria-hidden="true">
+    <path d="M30 14 h20 v6 q12 6 12 26 q0 26 -22 26 q-22 0 -22 -26 q0 -20 12 -26 z" fill="#1b2130" stroke="#5b6070" stroke-width="1.5"/>
+    <path d="M24 44 L32 48 L38 44 L44 50 L50 45 L56 47" fill="none" stroke="#0b0d12" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="33" cy="36" r="1.5" fill="var(--demon-red)"/><circle cx="47" cy="36" r="1.5" fill="var(--demon-red)"/></svg>`;
+
+  // 宝箱魔小像：现形后的样子
+  const chestFace = `<span class="chest art revealed">${chest}</span>`;
+
+  // 信使：普通人的剪影（不是空壳人，没有方形冷光）
+  const walker = `<svg class="art-walker" viewBox="0 0 24 56" aria-hidden="true">
+    <circle cx="12" cy="7" r="5" fill="currentColor"/><path d="M5 18 Q12 13 19 18 L20 40 L16 40 L15 55 L9 55 L8 40 L4 40 Z" fill="currentColor"/></svg>`;
+
+  const portraits = { owl, abyss, demon: gameDemon, chest: chestFace, jar };
+
   // ---------- 开场故事的画面（Mark_to_Victoria_V009 的 10 页）。只用现有背景图与 SVG，不新增图片。 ----------
   const bg = (name, cls) => `<div class="pa-bg ${cls || ""}" style="background-image:url(assets/img/${name}.webp)"></div>`;
 
@@ -143,12 +185,12 @@
     hero: () => `<div class="pa-hero dimlamp">${hero}</div>`,
     pendulum: () => pendulum,
     way: () => `${bg("city-dead", "dim low")}<div class="pa-road"></div><div class="pa-hero">${hero}</div>`,
-    dawn: () => `${bg("city-alive", "dawn")}`,
+    dawn: () => bg("dawn", "far"),
     flag: () => "",
   };
   function prologue(name) {
     return scenes[name] ? scenes[name]() : "";
   }
 
-  G.art = { clock, hero, zero, chest, hollow, prologue };
+  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker };
 })();

@@ -175,11 +175,25 @@
     fns: ["abyss2.boast", "abyss2.realQIntro", "abyss2.doorResult", "abyss2.doorLabel"],
   };
 
+  // M10：无底渊第 3 局（门的报告、三条长廊决战、救长廊信使、长廊复苏、零发呆）
+  const m10 = {
+    ids: [
+      "abyss3.task.eyebrow", "abyss3.task.options", "abyss3.task.skip", "abyss3.task.reply.drew", "abyss3.task.reply.drewLong", "abyss3.task.reply.no", "abyss3.task.reply.skip",
+      "abyss3.eyebrow", "abyss3.intro", "abyss3.hpLabel", "abyss3.corridors", "abyss3.entrance.say", "abyss3.entrance.hint", "abyss3.goIn", "abyss3.noDoorInside", "abyss3.noDoorAfter",
+      "abyss3.m1.whisper", "abyss3.m1.mechanic", "abyss3.m1.bait", "abyss3.m2.whisper", "abyss3.m2.mechanic", "abyss3.m2.bait", "abyss3.m3.whisper", "abyss3.m3.mechanic", "abyss3.m3.bait",
+      "abyss3.healed", "abyss3.hit", "abyss3.crit", "abyss3.lateHit", "abyss3.stepRecognize", "abyss3.moves", "abyss3.readRight", "abyss3.misread", "abyss3.doorOut",
+      "abyss3.finalBlow", "abyss3.deflate", "abyss3.zeroAfter",
+      "messenger.eyebrow", "messenger.intro", "messenger.now", "messenger.inside", "messenger.stopped", "messenger.awake", "messenger.aheadOfHim",
+      "corridor.revived", "corridor.companion", "zero.stare", "zero.stareBack",
+    ],
+    fns: ["abyss3.task.q", "abyss3.doorLabel", "abyss3.hideTimeRebut", "abyss3.result"],
+  };
+
   G.contract = {
     enums,
-    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9 },
+    milestones: { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10 },
     // 每种语言当前要求齐全的里程碑
-    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7"] },
+    requiredByLang: { zh: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10"], en: ["m0", "m1", "m2", "m3", "m4", "m5", "m6", "m7"] },
     idsFor(lang) {
       return (this.requiredByLang[lang] || []).flatMap((m) => this.milestones[m].ids);
     },
