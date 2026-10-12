@@ -127,6 +127,14 @@
   const zeroDot = `<svg class="art-zerodot" viewBox="0 0 40 46" aria-hidden="true">
     <path d="M26 24 C29 31 26 39 17 43 C21 37 22 32 20 27 Z" fill="var(--demon-red)"/><circle cx="20" cy="18" r="10" fill="var(--demon-red)"/></svg>`;
 
+  // 第 28 天：钟楼剪影，尖顶上一点静止的红光（零在钟楼上）。放在对白上方，不依赖背景坐标，也不会被按钮挡住
+  const towerRed = `<svg class="art-towerred" viewBox="0 0 60 90" aria-hidden="true">
+    <g fill="#1b2130" stroke="#5b6070" stroke-width="1" stroke-linejoin="round">
+      <path d="M30 6 L36 30 L24 30 Z"/><rect x="20" y="30" width="20" height="58"/>
+      <path d="M16 34 L20 26 L20 34 Z M44 34 L40 26 L40 34 Z"/></g>
+    <circle cx="30" cy="46" r="6" fill="#0b0d12" stroke="#5b6070" stroke-width="1.2"/>
+    <circle cx="30" cy="9" r="2.4" fill="var(--demon-red)"/></svg>`;
+
   // 宝箱魔小像：现形后的样子
   const chestFace = `<span class="chest art revealed">${chest}</span>`;
 
@@ -234,5 +242,5 @@
   // 引擎在同样位置叠点击按钮时请读这个值，别写死（Mark 的 loop/session1.js 现在写死 38）。
   ring.R = 34;
 
-  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker, ring, zeroDot };
+  G.art = { clock, hero, zero, chest, hollow, prologue, portraits, walker, ring, zeroDot, towerRed };
 })();

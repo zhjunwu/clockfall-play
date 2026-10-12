@@ -266,18 +266,12 @@
     if (!t || t.querySelector(".talk-who")) return;
     t.insertAdjacentHTML("afterbegin", `<div class="talk-who" aria-hidden="true">${G.art.zero.replace('class="art-zero"', 'class="art-zero absent"')}</div>`);
   });
-  // 第 28 天：钟楼顶上的红光。死去的城，尖顶一点小红光，静止、不闪
+  // 第 28 天：钟楼顶上的红光。对白上方一座小钟楼剪影，尖顶一点静止的红光。
+  // 曾经点在背景图上，但对白屏的按钮会盖住尖顶，细十字架在手机上也看不见（Mary to Victoria V013 C1），所以改成和小像同一个位置。
   on("zero.towerLight", () => {
-    setScene("city", true);
-    setWarmth(0);
-    document.body.classList.add("scene-on");
-    const b = ensureBackdrop();
-    let l = b.querySelector(".towerlight");
-    if (!l) { l = document.createElement("i"); l.className = "towerlight"; b.appendChild(l); }
-    // 背景是 cover + 顶部居中：按屏幕换算尖顶在城市图上的位置（横 50.7%、纵 10%）
-    const W = Math.max(innerWidth, innerHeight * 720 / 1052), H = W * 1052 / 720;
-    l.style.left = (innerWidth / 2 + (0.507 - 0.5) * W) + "px";
-    l.style.top = (0.10 * H) + "px";
+    const t = app.querySelector(".talk");
+    if (!t || t.querySelector(".talk-who")) return;
+    t.insertAdjacentHTML("afterbegin", `<div class="talk-who tower" aria-hidden="true">${G.art.towerRed}</div>`);
   });
   // 第 31 天：每反驳一轮，破罐魔的裂缝深一层；第 3 轮歪倒、泄气
   let jarCrack = 0;

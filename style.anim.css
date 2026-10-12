@@ -74,7 +74,7 @@ body.scene-city .stack.center { margin-top: 6vh; }
 @keyframes tailsway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
 
 /* 零失踪期间的空位：只剩虚线轮廓，没有填充、没有红点 */
-.art-zero.absent path, .art-zero.absent circle { fill: none; stroke: var(--grey); stroke-dasharray: 3 3; stroke-opacity: .8; }
+.art-zero.absent path, .art-zero.absent circle { fill: none; stroke: var(--muted); stroke-dasharray: 3 3; stroke-opacity: .7; }
 .art-zero.absent .dot { display: none; }
 .art-zero.absent .tail { animation: none; }
 /* 破罐魔：每一屏的第一行、靠右，自己占一小行，不叠在任何东西上，不动 */
@@ -267,8 +267,9 @@ body.scene-city .stack.center { margin-top: 6vh; }
 .cityscene .cityzero .art-zero { width: 100%; height: 100%; overflow: visible; }
 /* 第 28 天零的小红点：很淡、静止，不闪、不发光 */
 .zerodot.art .art-zerodot { width: 22px; height: 26px; opacity: .45; }
-/* 第 28 天钟楼顶上的红光 */
-.backdrop .towerlight { position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--demon-red); box-shadow: 0 0 6px rgba(224, 57, 43, .6); opacity: .85; z-index: 2; }
+/* 第 28 天钟楼顶上的红光：对白上方的小钟楼剪影，红光静止、不闪 */
+.talk-who.tower { width: 48px; height: 72px; }
+.talk-who.tower svg { width: 100%; height: 100%; }
 /* 第 31 天破罐魔的裂缝：一轮深一层；第 3 轮歪倒、泄气（不碎、不爆） */
 .art-jar .jc { opacity: 0; transition: opacity .8s ease; }
 .art-jar[data-crack="1"] .jc1, .art-jar[data-crack="2"] .jc1, .art-jar[data-crack="2"] .jc2, .art-jar[data-crack="3"] .jc { opacity: 1; }
